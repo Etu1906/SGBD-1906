@@ -1,0 +1,12 @@
+f
+nom%%cours%%
+lolo%%c1%%
+lala%%c1%%
+lulu%%c2%%
+lolo%%c2%%
+lala%%c2%%
+lulu%%c3%%
+lolo%%c3%%
+titi%%c1%%
+titi%%c2%%
+titi%%c3%%

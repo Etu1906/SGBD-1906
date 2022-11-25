@@ -1,0 +1,15 @@
+Inscription%%
+nom%%cours%%lozitra%%
+lolo%%c1%%1
+lolo%%c1%%2
+lolo%%c2%%1
+lolo%%c2%%2
+lulu%%c2%%1
+lolo%%c3%%1
+lolo%%c3%%2
+fifi%%c1%%1
+fifi%%c1%%2
+fifi%%c2%%2
+fifi%%c2%%1
+fifi%%c3%%1
+fifi%%c3%%2

@@ -1,25 +1,123 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
-import java.net.UnknownHostException;
+package socket;
 
-public class Client {
+import java.io.*;
+import java.net.*;
+import thread.SendClientThread;
+
+import base.Relation;
+import syntaxe.Grammaire;
+import syntaxe.As;
+import java.io.*;
+import donnees.Fichier;
+import java.util.*;
+
+public class Client extends Socket {
+    BufferedWriter out; 
+
+    String msg;
+
+    Scanner sc;
+
+
+
+    public Client( String host , int port )throws Exception{
+        super( host , port );
+    }
+
+    public void connectToServer()throws Exception{                                              //connection avec le seveur
+        try {
+            // flux pour envoyer
+            out = new BufferedWriter( new OutputStreamWriter( this.getOutputStream() ) ) ;
+
+            InputStream is = this.getInputStream(); 
+
+            sc = new Scanner(System.in);// pour lire à partir du clavier
+
+            SendClientThread thread = new SendClientThread(this , sc , out , msg );
+
+            thread.start();
+
+            Thread recevoir = new Thread(new Runnable() {
+                String msg;
+
+                @Override
+                public void run() {
+                    try {
+                        while( true ){
+                        
+                            ObjectInputStream message = new ObjectInputStream(is);
+                            try {
+                                Object obj  = message.readObject(); 
+                                if ( obj instanceof Relation == true ){
+                                    Relation r = (Relation) obj;
+        
+                                    System.out.println(" tete : "+Arrays.toString(r.getEn_tete()));
+        
+                                    r.printObj(r);
+                                }
+                                else if( obj instanceof Object[][][] == true ){
+
+                                    Object[][][] val = ( Object[][][] ) obj;
+
+
+                                        System.out.println(" title : "+val[0][0][0]);
+                                        System.out.println(Arrays.toString(val[1][0]));
+                                        for( int i = 0 ; i != val[2].length ; i++ ){
+                                            System.out.println( Arrays.toString( val[2][i] ) );
+                                        }
+                                }else if( obj instanceof Exception ){
+                                    System.out.println( ((Exception)obj).getMessage() );
+                                }
+                                else{
+                                    System.out.println(obj);
+                                }
+
+                            }catch( EOFException e ){
+                                e.printStackTrace();
+                            }
+                            catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            recevoir.start();
+
+        } catch (UnknownHostException e) {
+            throw e;
+        } catch (IOException e) {
+            throw e;
+        }
+    }
+
+///getters et setters
+    public BufferedWriter getOut() {
+        return out;
+    }
+    public Scanner getSc() {
+        return sc;
+    }
+
     public static void main(String[] args) {
         try {
-            Socket serveur = new Socket("localhost", 8082);
-            BufferedReader azo =  new BufferedReader(new InputStreamReader(serveur.getInputStream()));
-            for (String string : azo.lines().toList()) {
-                System.out.println(string);
-            }
-            serveur.close();
+            Client client = new Client("localhost", 8082);
+
+            client.connectToServer();
+
         } catch (UnknownHostException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
+        }  
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+         catch (Exception e) {
             e.printStackTrace();
         }
         
     }
+
 }

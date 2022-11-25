@@ -1,7 +1,9 @@
+package socket;
 import java.io.*;
 import java.net.*;
-import java.util.Timer;
-import java.util.TimerTask;
+import thread.SocketThread;
+import thread.TraitementThread;
+
 
 public class Serveur {
     public static void main(String[] args) {
@@ -10,9 +12,10 @@ public class Serveur {
             ServerSocket serverSocket = new ServerSocket(8082);
             while(true){
                 Socket client = serverSocket.accept();
-                (new SocketThread(client, 100000 , serverSocket )).start();
+                TraitementThread traitement = new TraitementThread( client , serverSocket );
+                (new SocketThread(client , serverSocket,traitement)).start();
             }
-            //serverSocket.close();
+            // serverSocket.close();
         } catch (Exception e) {
             //TODO: handle exception
             System.out.println(e.getMessage());
