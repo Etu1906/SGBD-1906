@@ -101,6 +101,13 @@ public class Grammaire {
 
             return g;
         }
+        if ( gram[0].compareToIgnoreCase("delete") == 0 ){
+            Grammaire g = new Delete();
+
+            g.bdd = bdd;
+
+            return g;
+        }
         if ( gram[0].compareToIgnoreCase("create") == 0 ){
             Grammaire g = new Create();
 

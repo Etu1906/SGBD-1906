@@ -1,3 +1,6 @@
 huhu
 nom%%prenom%%
 lala%%lala%%
+'huhu'%%'haha'%%
+haha%%'hihi'%%
+hihi%%hehe'%%

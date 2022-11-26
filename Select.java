@@ -4,6 +4,7 @@ import java.util.Arrays;
 import javax.swing.text.AbstractDocument.BranchElement;
 import javax.swing.text.StyledEditorKit.BoldAction;
 import base.Relation;
+import syntaxe.Delete;
 
 public class Select extends Grammaire {
 
@@ -14,7 +15,7 @@ public class Select extends Grammaire {
         
         String[] str_value = transformString( value );
         
-        if ( str_value[0].compareToIgnoreCase( "*" ) == 0 ){
+        if ( str_value[0].compareToIgnoreCase( "*" ) == 0 || this instanceof Delete == true){
 
             Relation rel = (Relation) this.next_gram.value[0] ;
 

@@ -1,7 +1,0 @@
-rel1
-nom%%prenom%%chien%%
-huhu%%hallo%%huhio%%
-Marco Polo%%Bella Note%%Italie%%
-haha%%yoyo%%just%%
-Ralp%%Steave%%James%%
-null%%null%%huhu%%

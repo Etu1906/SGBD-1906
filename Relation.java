@@ -421,6 +421,10 @@ public class Relation {
 
             System.out.println("diff result : ");
             printObj(new_r);
+
+            new_r.nom = this.nom;
+
+            new_r.en_tete = this.en_tete;
             return new_r;
         }catch( Exception e ){
             throw e;

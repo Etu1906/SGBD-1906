@@ -166,6 +166,20 @@ public class Fichier extends File {
         }
     }
 
+    public void DeleteAction( Relation r )throws Exception{
+        try {
+            this.delete();
+
+            this.createNewFile();
+
+            this.insertTable( r );
+
+            throw new Exception( "delete effectue" );
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
     public void insertValue( Object[] value ) throws Exception {                    //inserer les valeurs d'une table
         FileWriter wr = new FileWriter(this, true);
 
