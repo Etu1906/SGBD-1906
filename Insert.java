@@ -113,7 +113,6 @@ public class Insert extends Grammaire{
 
             String req_tempo = req[indice];
             while( req[indice].compareToIgnoreCase("end") != 0 ){
-                // if( req[indice].charAt( req[indice].length() - 1 ) == ';' ) break;
                 
                 if( req[indice].compareToIgnoreCase(",") == 0 ){
                     if( req[indice - 1].charAt(0) != '\'' && req[indice - 1].charAt(req[indice - 1].length() - 1) != '\'' ){ 
@@ -125,6 +124,8 @@ public class Insert extends Grammaire{
                 }
                 indice++;
             }  
+    
+            // dernier valeur a ajouté 
             String value= req[indice - 1];
             String val = value.substring(1);
             val = val.substring(0, val.length()-1);                     //effacer les cotes
@@ -136,7 +137,7 @@ public class Insert extends Grammaire{
 
             Object[] all_val = getFilterValue( rel );                              //la valeur de toutes les colonnes 'null' si pas de valeur
 
-            f.insertValue(all_val);
+            f.insertValue(all_val);                                     //insertion
 
             throw new Exception(" insertion réussie ");
 
