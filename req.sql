@@ -45,4 +45,7 @@ select * from rel1 join hoho on rel1.chien = hoho.chien where nom = ralp or nom 
 select * from rel1  where nom = ralp or nom = huhu
 
 
+update huhu set nom = 'ralph' where nom = gigi end
+
+
 

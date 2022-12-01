@@ -23,8 +23,8 @@ public class SendClientThread extends Thread {
 
     public void send()throws Exception{                              //envoie de message
         while (true) {
+            // System.out.print(">");
             msg = sc.nextLine();
-            System.out.println(msg);
             if(  msg.compareToIgnoreCase("exit") == 0 ){
                 break;
             }

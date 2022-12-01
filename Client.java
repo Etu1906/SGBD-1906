@@ -59,12 +59,13 @@ public class Client extends Socket {
 
                                     Object[][][] val = ( Object[][][] ) obj;
 
+                                    Relation r =Relation.ObjectToRelation(val);
 
-                                        System.out.println(" title : "+val[0][0][0]);
-                                        System.out.println(Arrays.toString(val[1][0]));
-                                        for( int i = 0 ; i != val[2].length ; i++ ){
-                                            System.out.println( Arrays.toString( val[2][i] ) );
-                                        }
+                                    System.out.println(" title : "+r.getNom());
+                                    System.out.println(Arrays.toString(r.getEn_tete()));
+                                    for( int i = 0 ; i != val[2].length ; i++ ){
+                                        System.out.println( Arrays.toString( r.getValue()[i] ) );
+                                    }
                                 }else if( obj instanceof Exception ){
                                     System.out.println( ((Exception)obj).getMessage() );
                                 }

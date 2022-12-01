@@ -41,7 +41,6 @@ public class SocketThread extends Thread{
         String msg = "";
 
         String bdd = "";
-
         while( true ){
             msg = in.readLine();                                                        //récupérer la ligne écrite par le client
             traitement.setReq(msg);                                                     //donner la requete au traitement                                    

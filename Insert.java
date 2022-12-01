@@ -14,7 +14,7 @@ public class Insert extends Grammaire{
     Vector<String> colonne = new Vector<String>();
     Vector<String> values = new Vector<String>();
 
-    String[] syntaxe = { "into" , "col" , ";" , "," , "values" };
+    String[] syntaxe = { "into" , "col" , "end" , "," , "values" };
     public String findValueByIndex( String name){             //retrouver la valeur grace a l'index de la valeur            
         int i = colonne.indexOf(name);
         if( i == -1 )   return "null";                      //si elle n'est pas précisée
@@ -55,16 +55,16 @@ public class Insert extends Grammaire{
     }
 
     int verifyAfterValues( String[] req , int indice )throws Exception{
-        while( req[indice].compareToIgnoreCase(syntaxe[2]) != 0  ){
+        while( req[indice].compareToIgnoreCase("end") != 0  ){
 
-            if( req[indice].charAt( req[indice].length() - 1 ) == ';' ){
-                break;
-            }
             if( req[indice].compareToIgnoreCase(syntaxe[3]) == 0 ){
+                System.out.println(" indice :  "+indice);
                 if( req[indice - 2].compareToIgnoreCase(syntaxe[4]) != 0 && req[indice - 2].compareToIgnoreCase(syntaxe[3]) != 0 ){
                     throw new Exception( " une erreur pres de *"+req[indice - 2]);
                 }
+
             }
+
             indice++;
             if( indice>= req.length )   throw new Exception(" syntaxe invalide apres values ");
         }  
@@ -80,9 +80,11 @@ public class Insert extends Grammaire{
 
             indice = verifyColAndValues(req, indice);
             
+            System.out.println(" valeur apres col val "+indice);
+
             indice = verifyAfterValues(req, indice);  
 
-            if( indice != req.length - 1 ) throw new Exception(" ; pas a la bonne place ");
+            // if( indice != req.length - 1 ) throw new Exception(" end pas a la bonne place ");
         }catch( Exception e ){
             throw e;
         }
@@ -110,8 +112,8 @@ public class Insert extends Grammaire{
             }
 
             String req_tempo = req[indice];
-            while( req[indice].compareToIgnoreCase(";") != 0 ){
-                if( req[indice].charAt( req[indice].length() - 1 ) == ';' ) break;
+            while( req[indice].compareToIgnoreCase("end") != 0 ){
+                // if( req[indice].charAt( req[indice].length() - 1 ) == ';' ) break;
                 
                 if( req[indice].compareToIgnoreCase(",") == 0 ){
                     if( req[indice - 1].charAt(0) != '\'' && req[indice - 1].charAt(req[indice - 1].length() - 1) != '\'' ){ 
@@ -124,11 +126,9 @@ public class Insert extends Grammaire{
                 indice++;
             }  
             String value= req[indice - 1];
-            if( req[indice].charAt( req[indice].length() - 1 ) == ';' ){
-                value = req[indice].substring(1);                       //enlever '
-                value = value.substring(0, value.length()-2);           //enlever ';
-            }
-            values.add( value );
+            String val = value.substring(1);
+            val = val.substring(0, val.length()-1);                     //effacer les cotes
+            values.add( val );
 
             Fichier f = new Fichier( nom , bdd );
 

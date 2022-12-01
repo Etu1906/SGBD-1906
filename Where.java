@@ -27,10 +27,12 @@ public class Where extends Grammaire{
 
     public void setPrevious_gram( String[] req , int id ) throws Exception {            //récupérer tous les where de la req
         try{
-                if ( req[ id + 4 ] == null ){
+                if ( req[ id + 4 ] == null  ){
                     throw new Exception(" syntaxe invalide where ( "+( id + 4 )+" ) ");
                 }
-
+                if( req[ id + 4 ].compareToIgnoreCase("end") == 0 ){
+                    return ;
+                }
                 this.next_gram = new Where( ( id + 4 ) , req);              //fonction rec
 
                 this.next_gram.previous_gram = this;

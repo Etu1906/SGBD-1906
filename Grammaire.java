@@ -1,6 +1,7 @@
 package syntaxe;
 import java.util.*;
 import base.Relation;
+import syntaxe.Update;
 public class Grammaire {
     Grammaire next_gram;
     Grammaire previous_gram;
@@ -88,6 +89,21 @@ public class Grammaire {
         return new Relation();
     }
 
+    public static String[] verifyReqEnd( String req ){            //vérifier si c'est la fin dub requete (END)
+        String[] valiny = new String[2];
+
+        String[] gram = req.split(" ");
+        gram = trim(gram);
+
+        valiny[0] = "end";
+        valiny[1] = req;
+
+        if( gram[gram.length - 1].compareToIgnoreCase("end")  != 0 ){           //la req n'est pas terminée
+            valiny[0] = "tempo";                                                    //voir si la req est une req temporaire 
+        }   
+        return valiny;
+    }
+
     public static Grammaire syntaxAnalysis( String req , String bdd ) throws Exception {             //initialisation : select ou create ou ...
         String[] gram = req.split(" ");
         gram = trim(gram);
@@ -122,6 +138,13 @@ public class Grammaire {
 
             return g;
         }
+        if ( gram[0].compareToIgnoreCase("update") == 0 ){
+            Grammaire g = new Update();
+
+            g.bdd = bdd;
+
+            return g;
+        }
         throw new Exception(" syntaxe invalide , 1ere ligne ");
     }
 
@@ -138,7 +161,6 @@ public class Grammaire {
                 g.action( gram , new_r , bdd);                   //si l'expression est create    
             }
             else{
-
                 new_r = g.action(gram , new_r , bdd);             //une action provoque une autre action  , voir les classes filles
             }
 

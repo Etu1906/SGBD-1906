@@ -58,6 +58,12 @@ public class Relation {
         this.en_tete = title;
     }
 
+    public static Relation ObjectToRelation( Object[][][] relation ){                      //obj[][][]   en relation
+        Relation r = new Relation( String.valueOf(relation[0][0][0]) , relation[1][0] );
+        r.value = relation[2];
+        return r;
+    }
+
     public static Relation findRelation( Vector<Relation> l_r , String nom ){
         for ( int i = l_r.size() - 1 ; i >= 0 ; i-- ){
             System.out.println(" compare :  "+(l_r.get(i).nom).compareToIgnoreCase( nom )+" name "+l_r.get(i).nom+" "+nom);
@@ -84,6 +90,76 @@ public class Relation {
 
         return new_table;
     } 
+
+///update
+    public int findIndex( String val )throws Exception{
+        for( int i = 0 ; i != en_tete.length ; i++ ){
+            if( val.compareToIgnoreCase( String.valueOf(en_tete[i]) ) == 0 ){
+                return i;
+            }
+        }
+        throw new Exception( "la colonne "+val+" n'existe pas" );
+    }
+    
+    int[] indexOf( Object[][] val )throws Exception{
+        int[] indice = new int[ val.length ];
+        int index = 0;
+        for( int i = 0  ; i != val.length ; i++ ){
+            indice[index++] = findIndex( String.valueOf(val[i][0]) );
+        }
+
+        return indice;
+    }
+
+    public Relation update( Relation selection ,Object[][] update )throws Exception{         //update : delete puis insert
+        try{
+            Relation new_r = this.difference( selection );      //enlever les valeurs dans where
+
+            System.out.println(" selection pour update ");
+
+            printObj(selection);
+
+            selection.ChangeValueToUpdate(update);
+
+            printObj(selection);
+
+            new_r.value = Fusion(new_r.value, selection.value);            //fusionner les 2 relations ( défaut + nouvelle valeur )
+
+            return new_r;
+        }catch( Exception e ){
+            throw e;
+        }
+    }
+
+    public static Object[][] ObjectToVector( Vector<Vector> v ){
+        Object[][] val = new Object[ v.size() ][ v.get(0).size() ];
+
+        for( int i  = 0  ;  i != v.size() ; i++ ){
+            val[i] = v.get(i).toArray();
+        }
+
+        return val;
+    }
+
+
+    public void ChangeValueToUpdate( Object[][] update )throws Exception{                //relation apres selection + changement
+        try {
+            int[] indice = indexOf( update );                        //indice de chq colonne a changer
+
+            for( int i =  0 ;  i!= update.length ; i++ ){                //tous les colonnes a changer
+                for( int j =  0 ;  j != value.length ; j++ ){              //pour chaque valeur , on change
+                    value[j][ indice[i] ] = update[i][1];  
+                }
+            }
+            
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    
+
+
 
     public static Relation create_rel( String classe ) throws Exception
     {
@@ -375,6 +451,9 @@ public class Relation {
 
     //différence entre 2 obj[][]
     public static Object[][] difference( Object[][] a , Object[][] b ) throws Exception {
+        if( a.length == 0 || b.length == 0 ){               //différence ne sert a rien
+            return a;
+        }
         if ( a[0].length != b[0].length ){
             throw new Exception( " different nombre de colonne " );
         }
@@ -435,7 +514,7 @@ public class Relation {
     public String[] getCol( String[] not ){
         Vector<String> valiny = new Vector<String>();
         int count = 0 ;
-        List<String> liste = new ArrayList<>();
+        List<String> liste = new ArrayList<String>();
         liste = Arrays.asList( not );
         for ( int i = 0 ; i != en_tete.length ; i++ ){
             System.out.println(" izay miditra : "+this.en_tete[i]+"  "+Arrays.asList( not ).contains( this.en_tete[i] ));
@@ -455,6 +534,10 @@ public class Relation {
 
     public Relation division( Relation r , String[] col1 , String[] col2 ) throws Exception {
         try{
+            if( r.value.length == 0 )   throw new Exception(" division impossibe ( aucune valeur dans *"+r.nom+" ) ");
+
+            if( this.value.length == 0 )    return this;                //division ne sert a rien 
+
             String[] name =  col2 ;
 
             System.out.println("  colonne 1 : "+Arrays.toString(col1)+"  colonne 2 : "+Arrays.toString( col2 ));
@@ -533,6 +616,7 @@ public class Relation {
             i++;
         }
     }
+
 
     public Relation project( String[] nom )  throws Exception                   //projection
     {
