@@ -10,7 +10,10 @@ public class Select extends Grammaire {
 
     public void setValue( Object[] value ) throws Exception {
         if ( value == null ){
-            throw new Exception(" select invalide aucune colonne ");
+            if( this instanceof Select == true )
+                throw new Exception(" select invalide aucune colonne ");
+
+            throw new Exception(" delete invalide ");
         }
         
         String[] str_value = transformString( value );

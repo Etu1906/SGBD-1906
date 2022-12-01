@@ -8,13 +8,32 @@ public class Update extends Delete{
     Vector<Vector> update = new Vector<Vector>();
     String nom_table = "";
 
+    String[] syntaxe = { "update" , "set" , "where" };
+
+    public boolean In( String val , String[] array ){
+        for( int i = 0 ; i != array.length ; i++ ){
+            if( val.compareToIgnoreCase(array[i]) == 0){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     public void verifySyntax( String[] req )throws Exception{
         if( req[2].compareToIgnoreCase("set") != 0 ){
             throw new Exception(" erreur pres de *set ");
         }
 
-        if( req[4].compareToIgnoreCase("=") != 0 ){
-            throw new Exception(" attend un '=' ");
+        int indice  = 2;
+
+        while( req[indice].compareToIgnoreCase("where") != 0 ){
+            if( req[indice].compareToIgnoreCase("=") == 0 ){
+                if(  In(req[indice - 1], syntaxe ) == true || In(req[indice + 1], syntaxe ) == true ){
+                    throw new Exception(" une erreur pres de  *= ");
+                }
+            }
+            indice++;
         }
     }
 
@@ -29,6 +48,7 @@ public class Update extends Delete{
 
             nom_table = req[indice - 1];
 
+///set ...
             while( req[indice].compareToIgnoreCase("where") != 0 ){
                 if( req[indice].compareToIgnoreCase("=") == 0 ){
                     Vector v = new Vector();
@@ -48,13 +68,13 @@ public class Update extends Delete{
                 if( indice >= req.length ) break;
             }
 
-            Fichier f = new Fichier( nom_table , bdd);
+            Fichier f = new Fichier( nom_table , bdd);                  //récuperer la relation a modifier
 
             new_r = f.getRelation(nom_table);           //par défaut , si pas de where la relation a modifier est la valeur par défaut
 
-            this.value = new Object[1];
+            this.value = new Object[1];                                           
 
-            this.value[0] = f.getRelation(nom_table);
+            this.value[0] = f.getRelation(nom_table);                           //donner la relation de départ
 
 ///apres where
             while ( indice < req.length ){
@@ -86,11 +106,11 @@ public class Update extends Delete{
                 if ( indice >= req.length )  break;
             }
 
-            Object[][] upd = Relation.ObjectToVector(update);
+            Object[][] upd = Relation.ObjectToVector(update);               
 
-            Relation defaut = f.getRelation(nom_table);
+            Relation defaut = f.getRelation(nom_table);                                                 //la relation de départ
 
-            int nbr_colonne_modif = new_r.getValue().length;
+            int nbr_colonne_modif = new_r.getValue().length;                       
 
             new_r = defaut.update(new_r, upd);
 

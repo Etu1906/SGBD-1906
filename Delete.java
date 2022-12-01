@@ -19,7 +19,7 @@ public class Delete extends Select{
     public Relation action( String[] req , Relation new_r , String bdd) throws Exception {
 
         try{
-            verifyNext_grammar( req[1] );
+            verifyNext_grammar( req[1] );                   //select : vérifier si c'est bien from
 
             String[] colonne = req[1].split(",");
 
@@ -27,15 +27,15 @@ public class Delete extends Select{
 
             String tab = req[i];
 
-            while ( include( syntaxe , tab ) == true ){
+            while ( include( syntaxe , tab ) == true ){             //récupérer la relation par défaut
                 tab = req[i++];
             }
 
             String[] table = { tab };
 
-            this.next_gram.setValue(table);
+            this.next_gram.setValue(table);                                  //récupération dans le fichier
 
-            if ( req.length > 3 ){
+            if ( req.length > 3 ){                                          //s'il y a un where
                 int reference = 3 ;
                 while ( i < req.length ){
                     System.out.println(" pour i : "+reference+" compare :  "+req[ reference ]+" :  "+req[ reference ].compareToIgnoreCase("where"));
@@ -66,13 +66,13 @@ public class Delete extends Select{
 
             }
 
-            setValue(colonne);
+            setValue(colonne);                                                  //avoir toute les colonnes 
 
-            new_r = this.next_gram.requete( req );
+            new_r = this.next_gram.requete( req );                              //récupérer lws where
 
-            new_r = defaut.difference(new_r);
+            new_r = defaut.difference(new_r);                                   //enlever les valeurs de la sélection
 
-            getNewRelation(table[0], new_r);
+            getNewRelation(table[0], new_r);                                    //réinsérer la table 
 
             return new_r;
         }catch( Exception e ){
