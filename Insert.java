@@ -9,31 +9,46 @@ import base.Relation;
 import donnees.Fichier;
 
 public class Insert extends Grammaire{
-    
-    String nom;     //nom table 
+
+    String nom;     //nom table
     Vector<String> colonne = new Vector<String>();
     Vector<String> values = new Vector<String>();
+    Relation rel ;                                      //la relation a insérer
 
     String[] syntaxe = { "into" , "col" , "end" , "," , "values" };
-    public String findValueByIndex( String name){             //retrouver la valeur grace a l'index de la valeur            
+
+    public void verifyColonne()throws Exception{                                        //vérifier si les colonnes existe 
+        for( int i = 0 ; i != colonne.size() ; i++ ){
+            if( rel.include( colonne.get(i) ) == -1  ){
+                throw new Exception(" la colonne "+colonne.get(i)+"  n'existe pas ");
+            }
+        }
+    } 
+
+    public String findValueByIndex( String name)throws Exception{             //retrouver la valeur grace a l'index de la valeur
         int i = colonne.indexOf(name);
-        if( i == -1 )   return "null";                      //si elle n'est pas précisée
+        if( i == -1 && rel.include(name) != -1   )   return "null";                      //si elle n'est pas précisée
 
         return values.get(i);
     }
 
-    public Object[] getFilterValue( Relation r ){           //relié les valeurs et les colonnes demandées  ex : insert into huhu ( *lala ) values ( *hoho );       
-        Object[] res = new Object[ r.getEn_tete().length];
-        if( colonne.size() == 0 ){                  //si l'on a pas spécifié les colonnes
-            return values.toArray();
-        }
+    public Object[] getFilterValue(  )throws Exception{           //relié les valeurs et les colonnes demandées  ex : insert into huhu ( *lala ) values ( *hoho );
+        try{
+            verifyColonne();
+            Object[] res = new Object[ rel.getEn_tete().length];
+            if( colonne.size() == 0 ){                  //si l'on a pas spécifié les colonnes
+                return values.toArray();
+            }
 
-        for( int i = 0 ; i != res.length ; i++ ){
-            res[i] = findValueByIndex( String.valueOf(r.getEn_tete()[i]) ); 
-            System.out.println(" res["+i+"] :  "+res[i]);            
-        }
+            for( int i = 0 ; i != res.length ; i++ ){
+                res[i] = findValueByIndex( String.valueOf(rel.getEn_tete()[i]) );
+                System.out.println(" res["+i+"] :  "+res[i]);
+            }
 
-        return res;
+            return res;
+        }catch( Exception e ){
+            throw e;
+        }
     }
 
 
@@ -67,8 +82,8 @@ public class Insert extends Grammaire{
 
             indice++;
             if( indice>= req.length )   throw new Exception(" syntaxe invalide apres values ");
-        }  
-        return indice; 
+        }
+        return indice;
     }
 
     public void verifySyntaxe( String[] req )throws Exception{
@@ -79,10 +94,10 @@ public class Insert extends Grammaire{
             int indice = 3;
 
             indice = verifyColAndValues(req, indice);
-            
+
             System.out.println(" valeur apres col val "+indice);
 
-            indice = verifyAfterValues(req, indice);  
+            indice = verifyAfterValues(req, indice);
 
             // if( indice != req.length - 1 ) throw new Exception(" end pas a la bonne place ");
         }catch( Exception e ){
@@ -98,44 +113,68 @@ public class Insert extends Grammaire{
 
             nom = req[2];
             int indice = 3;
+
+            Fichier f = new Fichier( nom , bdd );
+
+            rel = f.getRelation( nom );                        //la relation concerné
+
             if( req[3].compareToIgnoreCase("col") == 0 ){                           //si l'on précise les colonnes
                 while( req[indice].compareToIgnoreCase("values") != 0 ){
-                    
+
                     if( req[indice].compareToIgnoreCase(",") == 0 ){
                         colonne.add( req[indice - 1] );
                     }
-                    
+
                     indice++;
                 }
 
                 colonne.add( req[indice - 1] );
             }
+        
+            boolean vect_tempo = false;      //voir si le vecotr colonne n'est que temporaire pour la vérification du type
+
+            if( colonne.size() ==  0){
+                colonne = Relation.ToVectorString( rel.getType() );
+                vect_tempo = true;
+            }
+
+            System.out.println(" valeur des colonnes :  "+Arrays.toString(colonne.toArray()));
 
             String req_tempo = req[indice];
+            int indexOfColumn = 0;
             while( req[indice].compareToIgnoreCase("end") != 0 ){
-                
                 if( req[indice].compareToIgnoreCase(",") == 0 ){
-                    if( req[indice - 1].charAt(0) != '\'' && req[indice - 1].charAt(req[indice - 1].length() - 1) != '\'' ){ 
-                        throw new Exception(" erreur sur les cotes ");
-                    }   
-                        String val = req[indice - 1].substring(1);
-                        val = val.substring(0, val.length()-1);                     //effacer les cotes
-                        values.add( val );
+                    if( colonne.get(indexOfColumn).compareToIgnoreCase("String") == 0 ){
+                        if( req[indice - 1].charAt(0) != '\'' && req[indice - 1].charAt(req[indice - 1].length() - 1) != '\'' ){
+                            throw new Exception(" erreur sur les cotes ");
+                        }
+                            String val = req[indice - 1].substring(1);
+                            val = val.substring(0, val.length()-1);                     //effacer les cotes
+                            values.add( val );
+                    }else{
+                        values.add( req[indice - 1] );                                              //pour type number
+                    }
+                    indexOfColumn++;
                 }
                 indice++;
-            }  
-    
-            // dernier valeur a ajouté 
-            String value= req[indice - 1];
-            String val = value.substring(1);
-            val = val.substring(0, val.length()-1);                     //effacer les cotes
-            values.add( val );
+            }
+        if( colonne.get(indexOfColumn).compareToIgnoreCase("String") == 0 ){
+            // dernier valeur a ajouté
+            if( req[indice - 1].charAt(0) != '\'' && req[indice - 1].charAt(req[indice - 1].length() - 1) != '\'' ){
+                throw new Exception(" erreur sur les cotes ");
+            }
+                String val = req[indice - 1].substring(1);
+                val = val.substring(0, val.length()-1);                     //effacer les cotes
+                values.add( val );
+        }else{
+            if( req[indice - 1].matches("[+-]?\\d*(\\.\\d+)?") == false )
+                throw new Exception(" ce n'est pas un nombre ");
+            values.add( req[indice - 1] );                                              //pour type number
+        }
 
-            Fichier f = new Fichier( nom , bdd );
+        if( vect_tempo == true )   colonne.clear();                                 //effacer les données de la colonnes si temporaire
 
-            Relation rel = f.getRelation( nom );                        //la relation concerné
-
-            Object[] all_val = getFilterValue( rel );                              //la valeur de toutes les colonnes 'null' si pas de valeur
+            Object[] all_val = getFilterValue();                              //la valeur de toutes les colonnes 'null' si pas de valeur 
 
             f.insertValue(all_val);                                     //insertion
 

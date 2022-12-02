@@ -145,6 +145,13 @@ public class Grammaire {
 
             return g;
         }
+        if ( gram[0].compareToIgnoreCase( "drop") == 0 ){
+            Grammaire g = new Drop();
+
+            g.bdd = bdd;
+
+            return g;
+        }
         throw new Exception(" syntaxe invalide , 1ere ligne ");
     }
 

@@ -63,7 +63,8 @@ public class Client extends Socket {
 
                                     System.out.println(" title : "+r.getNom());
                                     System.out.println(Arrays.toString(r.getEn_tete()));
-                                    for( int i = 0 ; i != val[2].length ; i++ ){
+                                    System.out.println(Arrays.toString(r.getType()));
+                                    for( int i = 0 ; i != val[3].length ; i++ ){
                                         System.out.println( Arrays.toString( r.getValue()[i] ) );
                                     }
                                 }else if( obj instanceof Exception ){

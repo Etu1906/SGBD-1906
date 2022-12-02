@@ -74,7 +74,7 @@ public class Delete extends Select{
 
             getNewRelation(table[0], new_r);                                    //réinsérer la table 
 
-            return new_r;
+            throw new Exception( "delete effectue" );
         }catch( Exception e ){
             throw e;
         }

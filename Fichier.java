@@ -2,6 +2,7 @@ package donnees;
 
 import base.Relation;
 import java.io.*;
+import java.util.Arrays;
 import java.util.Vector;
 
 public class Fichier extends File {
@@ -10,10 +11,9 @@ public class Fichier extends File {
     String bdd;
 
     public Fichier(String table_name) {                     //pour création fichier
-        super("data/"+table_name.trim()+".txt");
+        super("data/"+table_name.trim());
 
-            path = "data/"+table_name+".txt";
-
+            path = "data/"+table_name;
         
     }
 
@@ -61,7 +61,7 @@ public class Fichier extends File {
         return new_val;
     }
 
-    public static void createTable( Vector<String> colonne , String bdd , String nom )throws Exception{
+    public static void createTable( Vector<String> colonne , Vector<String> type , String bdd , String nom )throws Exception{
         try {
             Fichier f = new Fichier( nom  ,bdd );
 
@@ -72,7 +72,7 @@ public class Fichier extends File {
 
             f.insertName(nom);                          //insertion nom
 
-            f.insertHead( toArray(colonne) );               //insertion colonne
+            f.insertHead( toArray(colonne) , toArray(type) );               //insertion colonne
 
         } catch (Exception e) {
             throw e;
@@ -131,6 +131,14 @@ public class Fichier extends File {
 
         r.setEn_tete(en_tete);                              //donner le nom des colonnes
 
+        line = br.readLine();
+
+        System.out.println(" line du type : "+line);
+
+        String[] type = line.split("%%");
+
+        r.setType(type);                              //donner le type des données
+
         Vector value = new Vector();
 
         int nb_col = 0;
@@ -147,6 +155,8 @@ public class Fichier extends File {
 
         br.close();
 
+        System.out.println(" valeur prise : "+Arrays.toString( value.toArray() ));
+
         Object[][] valiny = new Object[value.size()][nb_col];
 
         for (int i = 0; i != valiny.length; i++) {
@@ -160,9 +170,41 @@ public class Fichier extends File {
     public void insertTable(Relation r) throws Exception {                          //inserer une table 
         CreerFichier();
         insertName(r.getNom());
-        insertHead(r.getEn_tete());
+        insertHead(r.getEn_tete() , r.getType());
         for (int i = 0; i != r.getValue().length; i++) {
             insertValue(r.getValue()[i]);
+        }
+    }
+
+    public void dropTable( )throws Exception{
+        try {
+            if(this.isDirectory()){
+                //si le dossier est vide, supprimez-le
+                if(this.list().length == 0){
+                  this.delete();
+                  System.out.println("Dossier est supprimé: "+ this.getAbsolutePath());
+                }else{
+                  //lister le contenu du répertoire
+                  String files[] = this.list();
+                
+                for (String tmp : files) {
+                File file = new File(this, tmp);
+                //suppression récursive
+                file.delete();
+                }
+                //vérifiez à nouveau le dossier, s'il est vide, supprimez-le
+                    if(this.list().length == 0){
+                    this.delete();
+                    System.out.println("Dossier est supprimé: "+ this.getAbsolutePath());
+                    }
+                }            System.out.println(" suppression ");
+            }else{
+                //si il est un fichier, supprimez-le
+                this.delete();
+                System.out.println("Fichier est supprimé: " + this.getAbsolutePath());
+            }
+        } catch (Exception e) {
+            throw e;
         }
     }
 
@@ -174,7 +216,6 @@ public class Fichier extends File {
 
             this.insertTable( r );
 
-            throw new Exception( "delete effectue" );
         } catch (Exception e) {
             throw e;
         }
@@ -221,15 +262,24 @@ public class Fichier extends File {
         wr.close();
     }
 
-    public void insertHead(Object[] en_tete) throws IOException {               //inserer nom des colonnes
+    public void insertHead(Object[] en_tete , Object[] type) throws IOException {               //inserer nom des colonnes
         FileWriter wr = new FileWriter(this, true);
 
         BufferedWriter bw = new BufferedWriter(wr);
 
         String head = "";
 
-        for (int i = 0; i != en_tete.length; i++) {
+        for (int i = 0; i != en_tete.length; i++) {                                             //insertion en tete
             head = head + en_tete[i] + "%%";
+        }
+
+        bw.write(head);
+        bw.newLine();
+
+        head = "";
+
+        for (int i = 0; i != en_tete.length; i++) {                                             //insertion type
+            head = head + type[i] + "%%";
         }
 
         bw.write(head);

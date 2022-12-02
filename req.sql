@@ -47,5 +47,7 @@ select * from rel1  where nom = ralp or nom = huhu
 
 update huhu set nom = 'ralph' where nom = gigi end
 
+create table lala as hoho String , lili String end
+
 
 

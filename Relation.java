@@ -13,6 +13,7 @@ public class Relation {
     String nom;
     Object[][] value;
     Object[] en_tete;
+    Object[] type;
     int line = 0;
     String alias = "";
 
@@ -24,6 +25,12 @@ public class Relation {
     }
     public Object[][] getValue() {
         return value;
+    }
+    public Object[] getType() {
+        return type;
+    }
+    public void setType(Object[] type) {
+        this.type = type;
     }
     public String getNom() {
         return nom;
@@ -45,10 +52,11 @@ public class Relation {
 
     }
 
-    public Relation( String nom , Object[] title )
+    public Relation( String nom , Object[] title , Object[] type )
     {
         this.nom = nom;
         this.en_tete = title;
+        this.type = type;
     }
 
     public Relation( String nom , Object[][] value , Object[] title )
@@ -58,9 +66,18 @@ public class Relation {
         this.en_tete = title;
     }
 
+    public Relation( String nom , Object[][] value , Object[] title , Object[] type )
+    {
+        this.nom = nom;
+        this.value = value;
+        this.en_tete = title;
+        this.type = type;
+    }
+
+
     public static Relation ObjectToRelation( Object[][][] relation ){                      //obj[][][]   en relation
-        Relation r = new Relation( String.valueOf(relation[0][0][0]) , relation[1][0] );
-        r.value = relation[2];
+        Relation r = new Relation( String.valueOf(relation[0][0][0]) , relation[1][0] , relation[2][0] );
+        r.value = relation[3];
         return r;
     }
 
@@ -185,7 +202,7 @@ public class Relation {
     {
         triFusion(rel);
         triFusion(this);
-        Relation new_r = new Relation( this.nom , this.en_tete );
+        Relation new_r = new Relation( this.nom , this.en_tete , this.type);
 
         new_r.value = Fusion(this.value, rel.value);
 
@@ -357,8 +374,9 @@ public class Relation {
 
             new_r.en_tete = en_tete;
 
-            new_r.nom = nom; 
+            new_r.type = type;
 
+            new_r.nom = nom; 
             
             System.out.println("en tete "+Arrays.toString( en_tete ));
 
@@ -481,7 +499,6 @@ public class Relation {
             }
             i++;
         }  
-        
         printObj(obj);
 
         return obj;
@@ -499,11 +516,15 @@ public class Relation {
             printObj( rel );
 
             System.out.println("diff result : ");
+            Arrays.toString(type);
+
             printObj(new_r);
 
             new_r.nom = this.nom;
 
             new_r.en_tete = this.en_tete;
+
+            new_r.type = this.type;
             return new_r;
         }catch( Exception e ){
             throw e;
@@ -627,6 +648,9 @@ public class Relation {
 
             Object[][] obj = new Object[ this.value.length ][ value.length ];
 
+            System.out.println(" avant projection ");
+            printObj( this.value );
+
             for ( int i = 0 ; i != this.value.length ; i++ )
             {
                 insert( obj , value , i );
@@ -641,10 +665,15 @@ public class Relation {
 
             insert( new_title , value );
 
+            Object[] new_type =  new Object[ value.length ];
+
+            insertType( new_type , value );
+
             new_r.en_tete  = new_title;
+            new_r.type = new_type;
 
             System.out.println("en tete "+Arrays.toString( new_r.en_tete ));
-
+            System.out.println(Arrays.toString(type));
             printObj(new_r);
 
             return new_r;
@@ -668,6 +697,23 @@ public class Relation {
         {
             obj[i] = this.en_tete[val[i]];
         }
+    }
+
+
+    public void insertType( Object[] obj , int[] val )
+    {
+        for ( int i = 0 ; i != obj.length ; i++ )
+        {
+            obj[i] = this.type[val[i]];
+        }
+    }
+
+    public static Vector<String> ToVectorString( Object[] array  ){
+        Vector<String> v = new Vector<String>();
+        for( int i =  0 ; i != array.length ; i++ ){
+            v.add(String.valueOf(array[i]));
+        }
+        return v;
     }
 
     public int include( String nom )
@@ -746,12 +792,13 @@ public class Relation {
 
         valiny = cleanTable(valiny);
 
-        Relation new_r = new Relation( this.nom , valiny , this.en_tete  );
+        Relation new_r = new Relation( this.nom , valiny , this.en_tete , this.type );
 
         int j = 0; 
         int i = 0;
 
         System.out.println("en tete "+Arrays.toString( new_r.en_tete ));
+        System.out.println(Arrays.toString(type));
 
         printObj(new_r);
 
@@ -794,9 +841,15 @@ public class Relation {
 
         Object[] new_en_tete = new Object[ col_length1 + col_length2];
 
+        Object[] new_type = new Object[ col_length1 + col_length2];
+
         System.arraycopy( this.en_tete , 0 , new_en_tete , 0 , col_length1 );
 
         System.arraycopy( rel.en_tete , 0 , new_en_tete , col_length1 , col_length2 );
+
+        System.arraycopy( this.type , 0 , new_type , 0 , col_length1 );
+
+        System.arraycopy( rel.type , 0 , new_type , col_length1 , col_length2 );
 
         System.out.println(" en_tete "+Arrays.toString( new_en_tete ));
 
@@ -805,6 +858,8 @@ public class Relation {
         System.out.println(" size : "+new_r.value.length);
 
         new_r.en_tete = new_en_tete;
+
+        new_r.type = new_type;
 
         return new_r;
     }
@@ -863,7 +918,7 @@ public class Relation {
 
         obj = cleanTable(obj);
 
-        Relation new_r = new Relation( this.nom , obj , funsionEn_tete(rel) );
+        Relation new_r = new Relation( this.nom , obj , funsionEn_tete(rel) , funsionType(rel)  );
 
         printObj(new_r);
 
@@ -892,6 +947,10 @@ public class Relation {
 
         this.en_tete[ final_element ] = obj;
 
+        this.type[ id ] = this.type[ final_element ];
+
+        this.type[ final_element ] = obj;
+
     }
 
     public String[] funsionEn_tete( Relation rel1 ){
@@ -900,6 +959,16 @@ public class Relation {
         System.arraycopy(this.en_tete, 0, valiny, 0, this.en_tete.length);
 
         System.arraycopy(rel1.en_tete, 0, valiny, this.en_tete.length , rel1.en_tete.length - 1 );
+
+        return valiny;
+    }
+
+    public String[] funsionType( Relation rel1 ){
+        String[] valiny =  new String[ this.en_tete.length + rel1.en_tete.length - 1 ];
+
+        System.arraycopy(this.type, 0, valiny, 0, this.type.length);
+
+        System.arraycopy(rel1.type, 0, valiny, this.type.length , rel1.type.length - 1 );
 
         return valiny;
     }

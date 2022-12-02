@@ -98,14 +98,15 @@ public class TraitementThread{
 
                     l_r.add( new_r );
 
-                    Object[][][] obj = new Object[3][ 2 ][ new_r.getValue().length + 1 ]; // pour l'en tete donc + 1
+                    Object[][][] obj = new Object[ 4 ][ 2 ][ new_r.getValue().length + 1 ]; // pour l'en tete donc + 1
 
                     System.out.println( "last title : "+new_r.getNom() );
                     System.out.println( " en tete : "+Arrays.toString(new_r.getEn_tete()) );
 
                     obj[0][0][0] = new_r.getNom();
                     obj[1][0] = new_r.getEn_tete();
-                    obj[2] = new_r.getValue();
+                    obj[2][0] = new_r.getType(); 
+                    obj[3] = new_r.getValue();
 
                     return obj;
                 }catch( Exception e ){

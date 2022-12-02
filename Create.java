@@ -6,6 +6,7 @@ import donnees.Fichier;
 public class Create extends Grammaire {
 
     Vector<String> colonne = new Vector<String>();
+    Vector<String> type = new Vector<String>();
     String nom;
 
     public Create(){
@@ -35,11 +36,13 @@ public class Create extends Grammaire {
 
             nom = req[indice - 1];                                                          //nom de table avant (
 
-            while( req[indice].compareToIgnoreCase(";") != 0 ){
+            while( req[indice].compareToIgnoreCase("end") != 0 ){
+                System.out.println(" indice : "+req[indice]);
                 if( req[indice].compareToIgnoreCase(",") == 0 ){
                     if( req[indice - 1].compareToIgnoreCase("String") != 0 ){                   //vérification type
                         throw new Exception("  type doit etre String ");
                     }
+                    type.add( req[indice - 1] );
                     colonne.add( req[indice - 2] );                                             //récupérer colonne i-e : indice num2 avant ,
                 }
                 indice++;
@@ -47,9 +50,10 @@ public class Create extends Grammaire {
             if( req[indice - 1].compareToIgnoreCase("String") != 0 ){
                 throw new Exception("  type doit etre String ");
             }
+            type.add( req[indice - 1] );
             colonne.add( req[indice - 2] );
 
-            Fichier.createTable(colonne, bdd , nom );                                   //creation de la table
+            Fichier.createTable(colonne, type  ,bdd , nom );                                   //creation de la table
 
             throw new Exception( "table "+nom+" créée " );
 
