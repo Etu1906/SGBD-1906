@@ -39,17 +39,17 @@ public class Create extends Grammaire {
             while( req[indice].compareToIgnoreCase("end") != 0 ){
                 System.out.println(" indice : "+req[indice]);
                 if( req[indice].compareToIgnoreCase(",") == 0 ){
-                    if( req[indice - 1].compareToIgnoreCase("String") != 0 ){                   //vérification type
-                        throw new Exception("  type doit etre String ");
-                    }
+                    // if( req[indice - 1].compareToIgnoreCase("String") != 0 ){                   //vérification type
+                    //     throw new Exception("  type doit etre String ");
+                    // }
                     type.add( req[indice - 1] );
                     colonne.add( req[indice - 2] );                                             //récupérer colonne i-e : indice num2 avant ,
                 }
                 indice++;
             }
-            if( req[indice - 1].compareToIgnoreCase("String") != 0 ){
-                throw new Exception("  type doit etre String ");
-            }
+            // if( req[indice - 1].compareToIgnoreCase("String") != 0 ){
+            //     throw new Exception("  type doit etre String ");
+            // }
             type.add( req[indice - 1] );
             colonne.add( req[indice - 2] );
 

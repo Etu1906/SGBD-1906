@@ -1,0 +1,6 @@
+zavatrahafa
+etu%%nom%%
+number%%string%%
+1%%2%%
+'2'%%2%%
+2%%2%%
