@@ -8,6 +8,7 @@ import java.util.Iterator;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.lang.ref.Cleaner.Cleanable;
 import java.lang.reflect.*;
 public class Relation {
     String nom;
@@ -105,6 +106,8 @@ public class Relation {
             new_table[j] = table[j];
         }
 
+        System.out.println(" table clean ");
+
         return new_table;
     } 
 
@@ -200,13 +203,23 @@ public class Relation {
 
     public Relation union1( Relation rel )
     {
-        triFusion(rel);
-        triFusion(this);
+
+        if( String.valueOf(rel.getType()[0]).compareToIgnoreCase( "number" ) == 0 ){
+            System.out.println(" tri number ");
+            triFusionNumber(rel);
+            triFusionNumber(this);            
+        }else{
+            triFusion(rel);
+            triFusion(this);
+        }
+
         Relation new_r = new Relation( this.nom , this.en_tete , this.type);
 
         new_r.value = Fusion(this.value, rel.value);
 
         printObj(new_r);
+
+        cleanTable(new_r.value);
 
         return new_r;
     }
@@ -251,8 +264,70 @@ public class Relation {
  
 
 
+/// tri number
+
+        public static void triFusionNumber(Relation tableau)
+        {
+        int longueur=tableau.value.length;
+            if (longueur>0)
+                {
+                triFusionNumber(tableau,0,longueur-1);
+                }
+            
+        }
+
+        static void triFusionNumber(Relation tableau,int deb,int fin)
+        {
+        if (deb!=fin)
+            {
+            int milieu=(fin+deb)/2;
+            triFusionNumber(tableau,deb,milieu);
+            triFusionNumber(tableau,milieu+1,fin);
+            fusionNumber(tableau,deb,milieu,fin);
+            }
+        }
+
+        static void fusionNumber(Relation tableau,int deb1,int fin1,int fin2)
+        {
+        int deb2=fin1+1;
+
+        //on recopie les éléments du début du tableau
+        Object[] table1[]=new Object[fin1-deb1+1][tableau.value[0].length];
+        for(int i=deb1;i<=fin1;i++)
+            {
+            table1[i-deb1]=tableau.value[i];
+            }
+
+        int compt1=deb1;
+        int compt2=deb2;
+
+        for(int i=deb1;i<=fin2;i++)
+            {        
+            if (compt1==deb2) //c'est que tous les éléments du premier tableau ont été utilisés
+                {
+                break; //tous les éléments ont donc été classés
+                }
+            else if (compt2==(fin2+1)) //c'est que tous les éléments du second tableau ont été utilisés
+                {
+                tableau.value[i]=table1[compt1-deb1]; //on ajoute les éléments restants du premier tableau
+                compt1++;
+                }
+            else if (Double.valueOf(String.valueOf(table1[compt1-deb1][0])) < Double.valueOf(String.valueOf(tableau.value[compt2][0])))
+                {
+                tableau.value[i]=table1[compt1-deb1]; //on ajoute un élément du premier tableau
+                compt1++;
+                }
+            else
+                {
+                tableau.value[i]=tableau.value[compt2]; //on ajoute un élément du second tableau
+                compt2++;
+                }
+            }
+        }
 
 
+
+/// tri String 
     public static void triFusion(Relation tableau)
     {
     int longueur=tableau.value.length;
@@ -342,10 +417,16 @@ public class Relation {
 
             Object[][] obj = new Object[( this.value.length + rel.value.length )][ this.value[0].length ];
         
-            triFusion(this);
+            if( String.valueOf( rel.type[0] ).compareToIgnoreCase("number") == 0 ){
+                System.out.println(" tri number ");
+                triFusionNumber(this);
 
-            triFusion(rel);
+                triFusionNumber(rel);
+            }else{
+                triFusion(this);
 
+                triFusion(rel);
+            }
             int number_line = 0;
             
             int start = 0;
@@ -873,11 +954,16 @@ public class Relation {
         int id2 = rel.include( att2 );
 
         rel.permute( id2 , tete);
+        if( String.valueOf( rel.type[0] ).compareToIgnoreCase("number") == 0 && String.valueOf( this.type[0] ).compareToIgnoreCase("number") == 0 ){
+            triFusionNumber(this);
 
-        triFusion(this);
+            triFusionNumber( rel );
 
-        triFusion( rel );
+        }else{
+            triFusion(this);
 
+            triFusion( rel );
+        }
         int length_one = this.value.length ;
 
         int length_two = rel.value.length ;

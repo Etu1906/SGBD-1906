@@ -1,0 +1,14 @@
+Pointage
+	NumeroEmployes
+	DateHeure entree
+	DateHeure sortie
+	
+Total heure niasan'ny olona iray par jour ? par semaine ? par mois ?
+
+Total heure niasan'ny olona rehetra par jour ? par semaine ? par mois ?
+
+Liste olona tsy nahavita 40h/semaine (heure tsy vitany eo akaikiny)
+
+Isan'ny olona niasa par jour /semaine/mois ? (Misy pointage)
+
+azafady fa mbola tsy enregister izy teo

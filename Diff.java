@@ -14,12 +14,10 @@ public class Diff extends Grammaire{
 
 
     public Relation action( String[] req , Relation r , String bdd ) throws Exception {       
-
         Fichier f2 = new Fichier( req[index+1] , bdd );
         r1 = defaut;
 
         r2 = f2.getRelation( req[index+1] );
-
 
         r = r1.difference(r2);
 

@@ -55,6 +55,7 @@ public class Where extends Grammaire{
     public Relation action( String[] req , Relation r , String bdd) throws Exception{
 
         try{
+            System.out.println(" condition :  "+colonne+"  "+condition+"  "+input);
             Relation seletion = defaut.selection(colonne, condition, input);    // la req where
 
             Relation[] new_r = { seletion };
