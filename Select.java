@@ -1,8 +1,6 @@
 package syntaxe;
 
 import java.util.Arrays;
-import javax.swing.text.AbstractDocument.BranchElement;
-import javax.swing.text.StyledEditorKit.BoldAction;
 import base.Relation;
 import syntaxe.Delete;
 

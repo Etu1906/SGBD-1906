@@ -178,6 +178,10 @@ public class Grammaire {
 
     }
 
+    public Object[] Show( String[] req , String bdd )throws Exception{
+        return new Object[1];
+    }
+
     public void action( String[] req ,  String bdd ) throws Exception {                           //voir classes filles
 
     }

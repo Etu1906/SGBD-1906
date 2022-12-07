@@ -39,7 +39,6 @@ public class Insert extends Grammaire{
             if( colonne.size() == 0 ){                  //si l'on a pas spécifié les colonnes
                 return values.toArray();
             }
-
             for( int i = 0 ; i != res.length ; i++ ){
                 res[i] = findValueByIndex( String.valueOf(rel.getEn_tete()[i]) );
                 System.out.println(" res["+i+"] :  "+res[i]);
@@ -145,13 +144,15 @@ public class Insert extends Grammaire{
             while( req[indice].compareToIgnoreCase("end") != 0 ){
                 if( req[indice].compareToIgnoreCase(",") == 0 ){
                     if( colonne.get(indexOfColumn).compareToIgnoreCase("String") == 0 ){
-                        if( req[indice - 1].charAt(0) != '\'' && req[indice - 1].charAt(req[indice - 1].length() - 1) != '\'' ){
+                        if( req[indice - 1].charAt(0) != '\'' || req[indice - 1].charAt(req[indice - 1].length() - 1) != '\'' ){
                             throw new Exception(" erreur sur les cotes ");
                         }
                             String val = req[indice - 1].substring(1);
                             val = val.substring(0, val.length()-1);                     //effacer les cotes
                             values.add( val );
                     }else{
+                        if( req[indice - 1].matches("[+-]?\\d*(\\.\\d+)?") == false )
+                        throw new Exception(" ce n'est pas un nombre ");
                         values.add( req[indice - 1] );                                              //pour type number
                     }
                     indexOfColumn++;
@@ -160,7 +161,7 @@ public class Insert extends Grammaire{
             }
         if( colonne.get(indexOfColumn).compareToIgnoreCase("String") == 0 ){
             // dernier valeur a ajouté
-            if( req[indice - 1].charAt(0) != '\'' && req[indice - 1].charAt(req[indice - 1].length() - 1) != '\'' ){
+            if( req[indice - 1].charAt(0) != '\'' || req[indice - 1].charAt(req[indice - 1].length() - 1) != '\'' ){
                 throw new Exception(" erreur sur les cotes ");
             }
                 String val = req[indice - 1].substring(1);
@@ -175,6 +176,12 @@ public class Insert extends Grammaire{
         if( vect_tempo == true )   colonne.clear();                                 //effacer les données de la colonnes si temporaire
 
             Object[] all_val = getFilterValue();                              //la valeur de toutes les colonnes 'null' si pas de valeur 
+
+            Relation new_r =  f.getRelation( nom );
+
+            if( new_r.getEn_tete().length != all_val.length  ){
+                throw new Exception((new_r.getEn_tete().length - all_val.length )+" colonne en manque");
+            }
 
             f.insertValue(all_val);                                     //insertion
 

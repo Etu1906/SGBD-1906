@@ -17,6 +17,7 @@ public class Relation {
     Object[] type;
     int line = 0;
     String alias = "";
+    static String[] list_type = { "number", "string" };
 
     public void setAlias(String alias) {
         this.alias = alias;
@@ -470,6 +471,17 @@ public class Relation {
         }
     } 
 
+    public static void distinct( Vector<String> array )throws Exception{
+        for( int i = 0 ; i != array.size() ; i++ ){
+            for( int j = 0 ; j != array.size() ; j++ ){
+                if( String.valueOf(array.get(i)).compareToIgnoreCase( array.get(j) ) == 0 && i != j ){
+                    throw new Exception(" des colonnes égaux  num : "+( i + 1 )+"  et "+(j + 1 ));
+                }
+            }
+        }
+
+    }
+
     ///valeurs distinct d'un objet[][]
     //divers transformation
     public static Vector setObj( Object[] obj ){
@@ -802,6 +814,19 @@ public class Relation {
         for ( int i = 0  ; i != en_tete.length ; i++ )
         {
             if ( String.valueOf(en_tete[i]).compareToIgnoreCase( nom ) == 0 )
+            { 
+                return i;
+            }
+
+        }
+        return -1;
+    }
+
+    public static int includeType( String nom )
+    {
+        for ( int i = 0  ; i != list_type.length ; i++ )
+        {
+            if ( String.valueOf(list_type[i]).compareToIgnoreCase( nom ) == 0 )
             { 
                 return i;
             }

@@ -1,0 +1,6 @@
+dodo
+nom%%taille%%
+string%%number%%
+oho%%2%%
+ihi%%2%%
+hihi%%2%%

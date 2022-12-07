@@ -55,6 +55,13 @@ public class Client extends Socket {
         
                                     r.printObj(r);
                                 }
+                                else if( obj instanceof Object[] == true ){
+                                    Object[] show = ( Object[] ) obj;
+
+                                    for( int i = 0 ; i != show.length ; i++ ){
+                                        System.out.println(show[i]);
+                                    }
+                                }
                                 else if( obj instanceof Object[][][] == true ){
 
                                     Object[][][] val = ( Object[][][] ) obj;

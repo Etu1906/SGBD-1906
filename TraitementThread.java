@@ -2,6 +2,7 @@ package thread;
 import java.util.Arrays;
 import base.Relation;
 import syntaxe.Grammaire;
+import syntaxe.Show;
 import syntaxe.As;
 import java.io.*;
 import java.util.Arrays;
@@ -60,6 +61,14 @@ public class TraitementThread{
                 new_f.insertTable(r_save);
                 
                 return "relation sauvegardé";
+            }
+            else if( req.contains("show") == true ){
+                String[] reqSplit = req.split(" ");
+                reqSplit = Grammaire.trim(reqSplit);
+
+                Show show = new Show();
+
+                return show.Show(reqSplit, bdd);
             }
             else{
                 System.out.println(" bdd1 : "+bdd);

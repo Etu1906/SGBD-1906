@@ -1,4 +1,5 @@
 etu
-etu%%
-number%%
-2%%
+etu%%etu1%%
+number%%string%%
+2%%3
+2%%3%%

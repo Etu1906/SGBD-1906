@@ -17,6 +17,10 @@ public class Fichier extends File {
         
     }
 
+    public Fichier(){
+        super("data");
+    }
+
     public Fichier(String table_name , String bdd){                     //pour création fichier
         super("data/"+bdd+"/"+table_name.trim()+".txt");
 
@@ -178,6 +182,9 @@ public class Fichier extends File {
 
     public void dropTable( )throws Exception{
         try {
+            if( this.exists() == false ){
+                throw new Exception(" cette base ou table n'existe pas ");
+            }
             if(this.isDirectory()){
                 //si le dossier est vide, supprimez-le
                 if(this.list().length == 0){
