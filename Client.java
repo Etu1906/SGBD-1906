@@ -55,14 +55,13 @@ public class Client extends Socket {
         
                                     r.printObj(r);
                                 }
-                                else if( obj instanceof Object[] == true ){
+                                else if( obj.getClass().getSimpleName().compareToIgnoreCase("Object[]") == 0 ){
                                     Object[] show = ( Object[] ) obj;
-
                                     for( int i = 0 ; i != show.length ; i++ ){
                                         System.out.println(show[i]);
                                     }
                                 }
-                                else if( obj instanceof Object[][][] == true ){
+                                else if( obj.getClass().getSimpleName().compareToIgnoreCase("Object[][][]") == 0 ){
 
                                     Object[][][] val = ( Object[][][] ) obj;
 
@@ -74,7 +73,8 @@ public class Client extends Socket {
                                     for( int i = 0 ; i != val[3].length ; i++ ){
                                         System.out.println( Arrays.toString( r.getValue()[i] ) );
                                     }
-                                }else if( obj instanceof Exception ){
+                                }
+                                else if( obj instanceof Exception ){
                                     System.out.println( ((Exception)obj).getMessage() );
                                 }
                                 else{
