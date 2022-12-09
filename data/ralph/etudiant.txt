@@ -1,6 +1,0 @@
-etudiant
-nom%%cours%%
-string%%string%%
-Ralph%%c1%%
-Ralph%%c2%%
-Jobily%%c2%%

@@ -48,7 +48,6 @@ public class Client extends Socket {
                             ObjectInputStream message = new ObjectInputStream(is);
                             try {
                                 Object obj  = message.readObject();
-                                System.out.println(obj); 
                                 if ( obj instanceof Relation == true ){
                                     Relation r = (Relation) obj;
         
@@ -67,12 +66,15 @@ public class Client extends Socket {
                                     Object[][][] val = ( Object[][][] ) obj;
 
                                     Relation r =Relation.ObjectToRelation(val);
-
-                                    System.out.println(" title : "+r.getNom());
-                                    System.out.println(Arrays.toString(r.getEn_tete()));
-                                    System.out.println(Arrays.toString(r.getType()));
-                                    for( int i = 0 ; i != val[3].length ; i++ ){
-                                        System.out.println( Arrays.toString( r.getValue()[i] ) );
+                                    if( r.getNom() != null && r.getEn_tete().length != 0  ){
+                                        System.out.println(" title : "+r.getNom());
+                                        System.out.println(Arrays.toString(r.getEn_tete()));
+                                        System.out.println(Arrays.toString(r.getType()));
+                                        for( int i = 0 ; i != val[3].length ; i++ ){
+                                            System.out.println( Arrays.toString( r.getValue()[i] ) );
+                                        }
+                                    }else{
+                                        System.out.println(" aucun résultat ");
                                     }
                                 }
                                 else if( obj instanceof Exception ){
@@ -80,7 +82,7 @@ public class Client extends Socket {
                                 }
                                 else if( obj instanceof String == true ){
                                     if( String.valueOf( obj ).compareToIgnoreCase("bye!!!") == 0 ){
-                                        System.out.println(obj);
+                                        System.out.println(" cliquez sur entrée ");
                                         thread.interrupt();
                                         bye = true;
                                         return;
@@ -104,7 +106,6 @@ public class Client extends Socket {
                 }
             });
             recevoir.run();
-            System.out.println("bye : "+bye);
 
             if( this.bye == true ){
                 recevoir.interrupt();
@@ -132,12 +133,16 @@ public class Client extends Socket {
     }
 
     public static void main(String[] args) {
+        String host = "localhost";
         try {
-            Client client = new Client("localhost", 8082);
+            Client client = new Client(host, 8082);
 
             client.connectToServer();
 
-        }
+        }catch( SocketException e ){
+            System.out.println(" n'a pas pu se connecter au serveur : Connection refused\n");
+            System.out.println("Le serveur est-il actlif sur l'hote ' "+host+" ' ");
+        } 
         catch (UnknownHostException e) {
             e.printStackTrace();
         }  

@@ -80,6 +80,7 @@ public class Select extends Grammaire {
                 }
 
                 if ( req[ reference ].compareToIgnoreCase("div") == 0 ){
+                    System.out.println("nous sommes dans div");
                     this.next_gram.next_gram = new Div( reference , req , bdd );
 
                     this.next_gram.next_gram.previous_gram = this.next_gram;

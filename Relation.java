@@ -204,6 +204,22 @@ public class Relation {
 
     public Relation union1( Relation rel )
     {
+        if( rel.value.length == 0 && value.length == 0 ){
+            Relation new_r = new Relation();
+            Object[][] obj = new Object[0][0];
+            Object[] title = new Object[0];
+            new_r.value = obj;
+            new_r.en_tete = title;
+            new_r.type = title;
+
+            return new_r;
+        }
+        if( rel.value.length == 0 ){
+            return this;
+        }
+        if( this.value.length == 0 ){
+            return this;
+        }
 
         if( String.valueOf(rel.getType()[0]).compareToIgnoreCase( "number" ) == 0 ){
             System.out.println(" tri number ");
@@ -222,7 +238,8 @@ public class Relation {
 
         new_r.value = cleanTable(new_r.value);
 
-        new_r.value = distinct( new_r.value );
+        if( new_r.value.length == 0 )
+            new_r.value = distinct( new_r.value );
 
         return new_r;
     }
@@ -414,8 +431,20 @@ public class Relation {
 
     public Relation intersection( Relation rel )
     {
+        System.out.println(" length intersection : "+value.length+"  "+rel.value.length);
+        if( rel.value.length == 0 || value.length == 0 ){
+            Relation new_r = new Relation();
+            Object[][] obj = new Object[0][0];
+            Object[] title = new Object[0];
+            new_r.value = obj;
+            new_r.en_tete = title;
+            new_r.type = title;
+
+            return new_r;
+        }
         if ( rel.value[0].length == this.value[0].length )
         {
+
             Relation new_r = new Relation( );
 
             Object[][] obj = new Object[( this.value.length + rel.value.length )][ this.value[0].length ];
@@ -466,11 +495,19 @@ public class Relation {
 
             printObj(new_r);
 
-            new_r.value = distinct( new_r.value );
+            if( new_r.value.length != 0 )
+                new_r.value = distinct( new_r.value );
 
             return new_r;
         }else{
-            return  null;
+            Relation new_r = new Relation();
+            Object[][] obj = new Object[0][0];
+            Object[] title = new Object[0];
+            new_r.value = obj;
+            new_r.en_tete = title;
+            new_r.type = title;
+
+            return new_r;
         }
     } 
 
@@ -568,7 +605,7 @@ public class Relation {
             return a;
         }
         if ( a[0].length != b[0].length ){
-            throw new Exception( " different nombre de colonne " );
+            throw new Exception( " different nombre de colonne "+a[0].length+" et "+b[0].length );
         }
         int count = 0 ;
 
@@ -632,8 +669,9 @@ public class Relation {
         int count = 0 ;
         List<String> liste = new ArrayList<String>();
         liste = Arrays.asList( not );
+        System.out.println(" not : "+Arrays.toString(not));
         for ( int i = 0 ; i != en_tete.length ; i++ ){
-            System.out.println(" izay miditra : "+this.en_tete[i]+"  "+Arrays.asList( not ).contains( this.en_tete[i] ));
+            System.out.println(" izay miditra : "+this.en_tete[i]+" "+Arrays.asList( not ).contains( this.en_tete[i] )+" title : "+this.nom);
             if ( liste.contains( this.en_tete[i] ) == false  ){              //si la colonne n'est pas utilisée pour la division
                 valiny.add(String.valueOf(this.en_tete[i]));
             }
@@ -656,6 +694,8 @@ public class Relation {
 
             String[] name =  col2 ;
 
+            String[] name2 = col1; 
+
             System.out.println("  colonne 1 : "+Arrays.toString(col1)+"  colonne 2 : "+Arrays.toString( col2 ));
 
             System.out.println(" name :  "+Arrays.toString(this.getCol(col1)));
@@ -672,7 +712,7 @@ public class Relation {
 
             Relation r6 = r5.difference(this);                          //ze rehetra tsy izy 
 
-            Relation r7 = r6.project(this.getCol(name));             //alaina ze colonne ilaina amn valiny
+            Relation r7 = r6.project(this.getCol(name2));             //alaina ze colonne ilaina amn valiny
 
             Relation r8 = r3.difference(r7);                            //asorina ze rehetra tsy izy
 

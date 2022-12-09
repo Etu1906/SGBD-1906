@@ -1,5 +1,0 @@
-huhu
-nom%%hoho%%
-string%%string%%
-2%%lala%%
-1%%lili%%

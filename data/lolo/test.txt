@@ -1,4 +1,0 @@
-test
-nom%%
-String%%
-Ralph%%

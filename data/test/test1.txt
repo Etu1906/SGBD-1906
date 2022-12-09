@@ -1,4 +1,0 @@
-test1
-huhu%%nom%%
-String%%number%%
-hjoho%%1%%

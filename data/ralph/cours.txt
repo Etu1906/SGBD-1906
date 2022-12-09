@@ -1,5 +1,0 @@
-cours
-cours%%
-string%%
-c1%%
-c2%%

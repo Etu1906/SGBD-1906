@@ -111,11 +111,13 @@ public class Fichier extends File {
     }
 
     public Relation getRelation(String table_nom) throws Exception {                            //retourner la relation grace a son nom
+        if( this.exists() == false ){
+            throw new Exception(" cette relation n'existe pas : "+this.getName());
+        }
+
         Relation new_r = new Relation();
 
         setTable(new_r, table_nom);       
-        
-        System.out.println("fichier ");
 
         new_r.printObj(new_r);
 

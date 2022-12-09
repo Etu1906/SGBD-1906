@@ -1,4 +1,0 @@
-note
-idnote%%etu%%note%%idmatiere%%
-number%%number%%number%%number%%
-1%%1%%1%%1%%
