@@ -68,7 +68,7 @@ public class Delete extends Select{
 
             setValue(colonne);                                                  //avoir toute les colonnes 
 
-            new_r = this.next_gram.requete( req );                              //récupérer lws where
+            new_r = this.next_gram.requete( req , new_r  );                              //récupérer lws where
 
             new_r = defaut.difference(new_r);                                   //enlever les valeurs de la sélection
 

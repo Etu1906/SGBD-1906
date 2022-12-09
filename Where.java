@@ -53,7 +53,6 @@ public class Where extends Grammaire{
     }
 
     public Relation action( String[] req , Relation r , String bdd) throws Exception{
-
         try{
             System.out.println(" condition :  "+colonne+"  "+condition+"  "+input);
             Relation seletion = defaut.selection(colonne, condition, input);    // la req where
@@ -64,21 +63,21 @@ public class Where extends Grammaire{
 
             if ( this.next_gram instanceof Where ){                 //commencer vers la fin 
                 r = this.next_gram.action(req, r , bdd );
-            }
-
-            if ( this.previous_gram instanceof From){               //pour le premier where 
-                this.previous_gram.value[0] = r;                    
 
                 return r;
             }
-            if (  this.previous_gram instanceof Where ){
 
+            if ( this.previous_gram instanceof From ||  this.previous_gram instanceof Join ){               //pour le premier where 
+                this.previous_gram.value[0] = r;                    
+
+                return seletion;
+            }
+            if (  this.previous_gram instanceof Where ){
                 Grammaire g = this;
 
                 Relation fusion[] = new Relation[1];
 
                 while ( g.previous_gram instanceof Where == true ){             //tant que mbola where le izy 
-
                     String connecteur = req[ id ];
 
                     //récupére les relations a fusionner
@@ -87,11 +86,9 @@ public class Where extends Grammaire{
                     Relation r2 = ( Relation ) g.previous_gram.value[0];            
 
                     if ( connecteur.compareToIgnoreCase("and") == 0 ){
-
                         fusion[0] = r1.intersection(r2);
                     }
                     if ( connecteur.compareToIgnoreCase("or") == 0 ){
-                        
                         fusion[0] = r1.union1(r2);
 
                     }
@@ -107,19 +104,19 @@ public class Where extends Grammaire{
 
                 g.previous_gram.value = fusion;                                 // donner a from
 
-                System.out.println(" apres tout les where  ");
+                System.out.println( "  fusion where 1: " );
 
                 fusion[0].printObj(fusion[0]);
 
-                System.out.println(" apres return  ");
-
-                System.out.println(" size :  "+fusion[0].getValue().length);
-                for ( int i =0 ; i != fusion[0].getValue().length ; i++ ){
-                    System.out.println(Arrays.toString(fusion[0].getValue()[i]));
-                }
 
                 return fusion[0];
+
+
             }
+
+            System.out.println( "  seletion where : " );
+
+            seletion.printObj( seletion );
 
             return seletion;
 

@@ -1,0 +1,43 @@
+initialisation : 
+choisir dbb : use db1
+
+sortir : 
+bye 
++ entrée
+
+syntaxe show :
+show tables
+show databases
+
+syntaxe select : 
+select * from table where nom = huhu ( pas de cote ) end 
+select * from table where nom like huhu ( pas de cote ) end 
+select * from table where nom like huhu and prenom = huhu ( pas de cote ) end 
+select * from table where nom like huhu or prenom = huhu ( pas de cote ) end 
+select * from table where nom like huhu - prenom = huhu ( pas de cote ) ( difference ) end 
+select * from tab1 join tab2 on tab1.col1 = tab2.col2 end 
+select col1,col2,col3 from tab1 end ( pas d'espace entre les colonnes )
+select * from tab1 div tab2 on tab1.col1,tab1.col2 / tab2.col1,tab2.col2 end ( division )  
+select * from tab1 diff tab2 end (différence) ( Exception ne marche pas encore )
+select * from tab1 join tab2 on tab1.col1 = tab2.col2 end ( 1ere colonne tab1 et 2 colonne tab2 )
+
+syntaxe insertion :
+insert into tab col col1 , col2 values val1 , val2 end
+insert into tab values val1 , val2 end
+    si string :  values  'huhu'
+    si number : values 2
+
+syntaxe delete :
+delete from tab end
+delete from tab where col1 = val1 end 
+delete from tab where col1 like val1 end
+
+syntaxe update : 
+update tab set col1 = val1 where col = val end 
+update tab set col1 = val1 , col2 = val2  where col = val end 
+
+syntaxe création :
+create table tab as col1 type , col2 type end  (  type number et string pour le moment )
+
+
+

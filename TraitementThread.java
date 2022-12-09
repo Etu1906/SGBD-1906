@@ -32,6 +32,11 @@ public class TraitementThread{
 
             System.out.println(" bdd use : "+bdd);
             System.out.println(" req :  "+req+" equals : "+req.contains("save"));
+            if( req.compareToIgnoreCase("bye") == 0 ){
+                String bye = "bye!!!";
+                System.out.println(bye);
+                return bye;
+            }
             if ( req.contains("use") == true ){
                 String[] reqSplit = req.split(" ");
                 reqSplit = Grammaire.trim(reqSplit);

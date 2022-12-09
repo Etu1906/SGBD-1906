@@ -49,5 +49,38 @@ update huhu set nom = 'ralph' where nom = gigi end
 
 create table lala as hoho String , lili String end
 
+select * from etudiant
+join etu on et.etu = e.nombre
+end
+
+select * from etudiant
+join etu on et.etu = e.nombre
+where etu = 24 
+end
 
 
+select * from etudiant join etu on etudiant.etu = etu.nombre join huhu on etudiant.nom = huhu.nom where etu = 24 or etu = 25 end
+
+
+
+
+
+select * from etudiant join etu on etudiant.etu = etu.nombre join huhu on etudiant.nom = huhu.nom  where etu = 24 or etu = 25 end
+
+select * from etudiant join etu on etudiant.etu = etu.nombre join huhu on etudiant.nom = huhu.nom  end
+
+
+select * from etudiant join etu on etudiant.etu = etu.nombre end
+
+
+select * from etudiant join cours on etudiant.cours = cours.cours  where cours = c1 end
+
+ +------+------+--------+------+------+
+| etu  | nom  | nombre | nom  | hoho |
++------+------+--------+------+------+
+|   29 |    2 |     29 |    2 | lala |
+|   24 |    2 |     24 |    2 | lala |
+|   25 |    2 |     25 |    2 | lala |
++------+------+--------+------+------+
+
+select * from etudiant join cours on etudiant.cours = cours.cours  where cours = c1 or nom = Ralph end

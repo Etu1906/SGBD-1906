@@ -55,25 +55,6 @@ public class Select extends Grammaire {
             while ( i < req.length ){
                 System.out.println(" pour i : "+reference+" compare :  "+req[ reference ]+" :  "+req[ reference ].compareToIgnoreCase("where"));
 
-                if ( req[ reference ].compareToIgnoreCase("where") == 0 ){
-
-                    System.out.println(" ref :  where"+reference);
-                    this.next_gram.next_gram = new Where( reference , req);
-    
-                    this.next_gram.next_gram.previous_gram = this.next_gram;
-    
-                    next_gram.bdd = bdd;
-
-                    Where where = (Where) this.next_gram.next_gram;
-    
-                    new_r = (Relation) this.next_gram.value[0];
-    
-                    new_r = where.action(req, new_r , bdd );
-
-                    break;
-    
-                }
-
                 if ( req[ reference ].compareToIgnoreCase("diff") == 0 ){
                     this.next_gram.next_gram = new Diff( reference , req );
 
@@ -90,6 +71,10 @@ public class Select extends Grammaire {
                     this.next_gram.next_gram.previous_gram = this.next_gram;
 
                     next_gram.bdd = bdd;
+
+                    // Relation r = new Relation();
+
+                    // new_r = this.next_gram.next_gram.action(req, r , bdd); 
 
                     break ;
                 }
@@ -113,6 +98,25 @@ public class Select extends Grammaire {
                     reference += 1;
                 }
 
+                if ( req[ reference ].compareToIgnoreCase("where") == 0 ){
+
+                    System.out.println(" ref :  where"+reference);
+                    this.next_gram.next_gram = new Where( reference , req);
+    
+                    this.next_gram.next_gram.previous_gram = this.next_gram;
+    
+                    next_gram.bdd = bdd;
+
+                    Where where = (Where) this.next_gram.next_gram;
+    
+                    new_r = (Relation) this.next_gram.value[0];
+    
+                    new_r = where.action(req, new_r , bdd );
+
+                    break;
+    
+                }
+
                 reference++;
 
                 if ( reference >= req.length )  break;
@@ -122,7 +126,7 @@ public class Select extends Grammaire {
 
         setValue(colonne);
 
-        new_r = this.next_gram.requete( req );
+        new_r = this.next_gram.requete( req , new_r );
 
         return new_r;
     }
