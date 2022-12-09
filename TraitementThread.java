@@ -30,8 +30,10 @@ public class TraitementThread{
 
             Relation new_r = new Relation();
 
-            System.out.println(" bdd use : "+bdd);
-            System.out.println(" req :  "+req+" equals : "+req.contains("save"));
+            if( req.compareToIgnoreCase("bye") == 0 ){
+                String bye = "bye!!!";
+                return bye;
+            }
             if ( req.contains("use") == true ){
                 String[] reqSplit = req.split(" ");
                 reqSplit = Grammaire.trim(reqSplit);
@@ -44,8 +46,6 @@ public class TraitementThread{
                 f.setBdd(bdd);
                 
                 Grammaire g = new Grammaire();
-
-                System.out.println("bdd : "+bdd);
 
                 return "base de données choisit";
             }else if ( req.contains("save") == true ){
@@ -71,10 +71,7 @@ public class TraitementThread{
                 return show.Show(reqSplit, bdd);
             }
             else{
-                System.out.println(" bdd1 : "+bdd);
-
                 if( bdd == null ){
-                    System.out.println(" bdd est null ");
                     return " aucune base de données " ;
                 }
                 if(  bdd.compareToIgnoreCase("") == 0 ){
@@ -96,12 +93,7 @@ public class TraitementThread{
 
                     g = Grammaire.syntaxAnalysis(req , bdd);
 
-                    System.out.println(" bdd :  "+g.getBdd());
-
                     new_r = g.getRelation(req );
-
-                    System.out.println(" title : "+new_r.getNom());
-                    new_r.printObj(new_r);
 
                     g.setL_as( new Vector<As>() );
 
@@ -119,8 +111,8 @@ public class TraitementThread{
 
                     return obj;
                 }catch( Exception e ){
-                    e.printStackTrace();
-                    System.err.println(e);
+                    // e.printStackTrace();
+                    // System.err.println(e);
                     throw e;
                 }
             }

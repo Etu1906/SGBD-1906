@@ -85,8 +85,8 @@ public class Grammaire {
 
     }
 
-    public Relation requete( String[] req ) throws Exception {
-        return new Relation();
+    public Relation requete( String[] req , Relation new_r ) throws Exception {
+        return new_r;
     }
 
     public static String[] verifyReqEnd( String req ){            //vérifier si c'est la fin dub requete (END)
@@ -187,7 +187,6 @@ public class Grammaire {
     }
 
     public Relation action( String[] req , Relation r , String bdd ) throws Exception {          //voir classes filles
-
         return r;
     }
 
@@ -219,5 +218,7 @@ public class Grammaire {
     public Grammaire getPrevious_gram() {
         return previous_gram;
     }
+    public void setValue( int i ,String[] req ) throws Exception {}          //récupérer les 2 tables
+    //pour join
 }
 

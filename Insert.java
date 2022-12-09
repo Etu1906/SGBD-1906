@@ -133,7 +133,7 @@ public class Insert extends Grammaire{
             boolean vect_tempo = false;      //voir si le vecotr colonne n'est que temporaire pour la vérification du type
 
             if( colonne.size() ==  0){
-                colonne = Relation.ToVectorString( rel.getType() );
+                colonne = Relation.ToVectorString( rel.getEn_tete() );
                 vect_tempo = true;
             }
 
@@ -143,7 +143,8 @@ public class Insert extends Grammaire{
             int indexOfColumn = 0;
             while( req[indice].compareToIgnoreCase("end") != 0 ){
                 if( req[indice].compareToIgnoreCase(",") == 0 ){
-                    if( colonne.get(indexOfColumn).compareToIgnoreCase("String") == 0 ){
+                    String type = String.valueOf(rel.getType()[rel.include(colonne.get(indexOfColumn))]) ;
+                    if( type.compareToIgnoreCase("String") == 0 ){
                         if( req[indice - 1].charAt(0) != '\'' || req[indice - 1].charAt(req[indice - 1].length() - 1) != '\'' ){
                             throw new Exception(" erreur sur les cotes ");
                         }
@@ -159,7 +160,8 @@ public class Insert extends Grammaire{
                 }
                 indice++;
             }
-        if( colonne.get(indexOfColumn).compareToIgnoreCase("String") == 0 ){
+            String type = String.valueOf(rel.getType()[rel.include(colonne.get(indexOfColumn))]) ;
+            if( type.compareToIgnoreCase("String") == 0 ){
             // dernier valeur a ajouté
             if( req[indice - 1].charAt(0) != '\'' || req[indice - 1].charAt(req[indice - 1].length() - 1) != '\'' ){
                 throw new Exception(" erreur sur les cotes ");

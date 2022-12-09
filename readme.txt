@@ -1,9 +1,21 @@
+exemple de syntaxe : script.sql
+
 initialisation : 
 choisir dbb : use db1
 
 sortir : 
 bye 
-+ entrée
++ bouton entrée
+
+syntaxe création :
+create table tab as col1 type , col2 type end  (  type number et string pour le moment )
+create database nomDatabase end
+
+syntaxe insertion : insert into ... col ... values ... , .... end
+insert into tab col col1 , col2 values val1 , val2 end iks
+insert into tab values val1 , val2 end
+    si string :  values  'huhu'
+    si number : values 2
 
 syntaxe show :
 show tables
@@ -21,11 +33,7 @@ select * from tab1 div tab2 on tab1.col1,tab1.col2 / tab2.col1,tab2.col2 end ( d
 select * from tab1 diff tab2 end (différence) ( Exception ne marche pas encore )
 select * from tab1 join tab2 on tab1.col1 = tab2.col2 end ( 1ere colonne tab1 et 2 colonne tab2 )
 
-syntaxe insertion :
-insert into tab col col1 , col2 values val1 , val2 end
-insert into tab values val1 , val2 end
-    si string :  values  'huhu'
-    si number : values 2
+
 
 syntaxe delete :
 delete from tab end
@@ -35,9 +43,5 @@ delete from tab where col1 like val1 end
 syntaxe update : 
 update tab set col1 = val1 where col = val end 
 update tab set col1 = val1 , col2 = val2  where col = val end 
-
-syntaxe création :
-create table tab as col1 type , col2 type end  (  type number et string pour le moment )
-
 
 

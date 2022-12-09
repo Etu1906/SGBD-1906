@@ -96,7 +96,7 @@ public class Relation {
     Object[][] cleanTable( Object[][] table ){
         int i = 0 ;
         while ( table[i][0] != null ){
-            System.out.println("obj value : "+table[i]);
+            System.out.println(Arrays.toString( table[i] ));
             i++;
             if ( i >= table.length ) 
                 break;
@@ -204,6 +204,22 @@ public class Relation {
 
     public Relation union1( Relation rel )
     {
+        if( rel.value.length == 0 && value.length == 0 ){
+            Relation new_r = new Relation();
+            Object[][] obj = new Object[0][0];
+            Object[] title = new Object[0];
+            new_r.value = obj;
+            new_r.en_tete = title;
+            new_r.type = title;
+
+            return new_r;
+        }
+        if( rel.value.length == 0 ){
+            return this;
+        }
+        if( this.value.length == 0 ){
+            return this;
+        }
 
         if( String.valueOf(rel.getType()[0]).compareToIgnoreCase( "number" ) == 0 ){
             System.out.println(" tri number ");
@@ -220,7 +236,10 @@ public class Relation {
 
         printObj(new_r);
 
-        cleanTable(new_r.value);
+        new_r.value = cleanTable(new_r.value);
+
+        if( new_r.value.length == 0 )
+            new_r.value = distinct( new_r.value );
 
         return new_r;
     }
@@ -412,8 +431,20 @@ public class Relation {
 
     public Relation intersection( Relation rel )
     {
+        System.out.println(" length intersection : "+value.length+"  "+rel.value.length);
+        if( rel.value.length == 0 || value.length == 0 ){
+            Relation new_r = new Relation();
+            Object[][] obj = new Object[0][0];
+            Object[] title = new Object[0];
+            new_r.value = obj;
+            new_r.en_tete = title;
+            new_r.type = title;
+
+            return new_r;
+        }
         if ( rel.value[0].length == this.value[0].length )
         {
+
             Relation new_r = new Relation( );
 
             Object[][] obj = new Object[( this.value.length + rel.value.length )][ this.value[0].length ];
@@ -464,10 +495,19 @@ public class Relation {
 
             printObj(new_r);
 
+            if( new_r.value.length != 0 )
+                new_r.value = distinct( new_r.value );
 
             return new_r;
         }else{
-            return  null;
+            Relation new_r = new Relation();
+            Object[][] obj = new Object[0][0];
+            Object[] title = new Object[0];
+            new_r.value = obj;
+            new_r.en_tete = title;
+            new_r.type = title;
+
+            return new_r;
         }
     } 
 
@@ -479,7 +519,6 @@ public class Relation {
                 }
             }
         }
-
     }
 
     ///valeurs distinct d'un objet[][]
@@ -566,7 +605,7 @@ public class Relation {
             return a;
         }
         if ( a[0].length != b[0].length ){
-            throw new Exception( " different nombre de colonne " );
+            throw new Exception( " different nombre de colonne "+a[0].length+" et "+b[0].length );
         }
         int count = 0 ;
 
@@ -630,8 +669,9 @@ public class Relation {
         int count = 0 ;
         List<String> liste = new ArrayList<String>();
         liste = Arrays.asList( not );
+        System.out.println(" not : "+Arrays.toString(not));
         for ( int i = 0 ; i != en_tete.length ; i++ ){
-            System.out.println(" izay miditra : "+this.en_tete[i]+"  "+Arrays.asList( not ).contains( this.en_tete[i] ));
+            System.out.println(" izay miditra : "+this.en_tete[i]+" "+Arrays.asList( not ).contains( this.en_tete[i] )+" title : "+this.nom);
             if ( liste.contains( this.en_tete[i] ) == false  ){              //si la colonne n'est pas utilisée pour la division
                 valiny.add(String.valueOf(this.en_tete[i]));
             }
@@ -654,6 +694,8 @@ public class Relation {
 
             String[] name =  col2 ;
 
+            String[] name2 = col1; 
+
             System.out.println("  colonne 1 : "+Arrays.toString(col1)+"  colonne 2 : "+Arrays.toString( col2 ));
 
             System.out.println(" name :  "+Arrays.toString(this.getCol(col1)));
@@ -670,7 +712,7 @@ public class Relation {
 
             Relation r6 = r5.difference(this);                          //ze rehetra tsy izy 
 
-            Relation r7 = r6.project(this.getCol(name));             //alaina ze colonne ilaina amn valiny
+            Relation r7 = r6.project(this.getCol(name2));             //alaina ze colonne ilaina amn valiny
 
             Relation r8 = r3.difference(r7);                            //asorina ze rehetra tsy izy
 
@@ -970,70 +1012,103 @@ public class Relation {
         return new_r;
     }
 
-    public Relation jointure( Relation rel , String att1 , String att2 )
-    {
-        Object[] tete = new Object[ this.en_tete.length ];
-
-        int id1 = this.include( att1 );
-
-        int id2 = rel.include( att2 );
-
-        rel.permute( id2 , tete);
-        if( String.valueOf( rel.type[0] ).compareToIgnoreCase("number") == 0 && String.valueOf( this.type[0] ).compareToIgnoreCase("number") == 0 ){
-            triFusionNumber(this);
-
-            triFusionNumber( rel );
-
-        }else{
-            triFusion(this);
-
-            triFusion( rel );
-        }
-        int length_one = this.value.length ;
-
-        int length_two = rel.value.length ;
-
-        int col_length1 = this.value[0].length;
-
-        int col_length2 = rel.value[0].length;
-
-
-        Object[][] obj = new Object[ length_one * length_two  ][ col_length1 + col_length2 - 1 ];
-
-        int count = 0 ;
-
-        for ( int i = 0 ; i != this.value.length ; i++ )
-        {
-            for ( int j = 0 ; j != rel.value.length ; j++ )
-            {
-                System.out.println("  id1 : "+id1);
-                String one = String.valueOf(value[i][id1]);
-                String two = String.valueOf( rel.value[j][col_length2 - 1]);
-                if ( one.compareToIgnoreCase( two ) == 0 )
-                {
-                    System.arraycopy( this.value[i] , 0 , obj[count] , 0 , col_length1 );   //a partir de l'indice 0 copier dans obj[count] la valuer de value[i] et prener l'element de 0  jusqu'a col_length1
-
-                    System.arraycopy( rel.value[j] , 0 , obj[count] , col_length1 , col_length2 - 1 );
-
-                    count++;
+    public int[] getSame( Relation rel )throws Exception{                          //les colonnes avec le meme valeur
+        for( int i = 0 ; i != rel.value.length ; i++ ){
+            for( int j = 0 ; j != rel.value.length ; j++ ){
+                if( String.valueOf(en_tete[i]).compareToIgnoreCase( String.valueOf(rel.en_tete[j]) ) == 0 ){
+                    int[] value = { i , j };
+                    return value;
                 }
             }
         }
 
-        System.out.println(" en_tete "+Arrays.toString( en_tete ));
+        throw new Exception(" il n'y a pas colnnes egaux ");
+    }
 
-        for ( int i = 0 ; i!= obj.length ; i++ )
-        {
-            System.out.println(" obj "+Arrays.toString( obj[i] ));
-        } 
 
-        obj = cleanTable(obj);
+    public Relation jointure( Relation rel , String att1 , String att2 )throws Exception
+    {
+        try{
+            Object[] tete = new Object[ this.en_tete.length ];
 
-        Relation new_r = new Relation( this.nom , obj , funsionEn_tete(rel) , funsionType(rel)  );
+            int id1 , id2;
 
-        printObj(new_r);
+            if( att1.compareToIgnoreCase("") == 0 ){
+                System.out.println( "  colonne concernee : "+getSame( rel )[0]+" et "+getSame( rel )[1] );
 
-        return new_r;
+                id1 = getSame( rel )[0];
+                id2 = getSame( rel )[1];
+            }else{
+                id1 = this.include( att1 );
+
+                id2 = rel.include( att2 );
+            }
+
+            rel.permute( id2 , tete);
+            if( String.valueOf( rel.type[0] ).compareToIgnoreCase("number") == 0 && String.valueOf( this.type[0] ).compareToIgnoreCase("number") == 0 ){
+                triFusionNumber(this);
+
+                triFusionNumber( rel );
+
+            }else{
+                triFusion(this);
+
+                triFusion( rel );
+            }
+            int length_one = this.value.length ;
+
+            int length_two = rel.value.length ;
+
+            int col_length1 = this.value[0].length;
+
+            int col_length2 = rel.value[0].length;
+
+
+            Object[][] obj = new Object[ length_one * length_two  ][ col_length1 + col_length2 - 1 ];
+
+            int count = 0 ;
+
+            System.out.println(" avant jointure : ");
+
+            printObj( value );
+
+            printObj( rel.value );
+
+            for ( int i = 0 ; i != this.value.length ; i++ )
+            {
+                for ( int j = 0 ; j != rel.value.length ; j++ )
+                {
+                    System.out.println("  id1 : "+id1);
+                    String one = String.valueOf(value[i][id1]);
+                    String two = String.valueOf( rel.value[j][col_length2 - 1]);
+                    if ( one.compareToIgnoreCase( two ) == 0 )
+                    {
+                        System.arraycopy( this.value[i] , 0 , obj[count] , 0 , col_length1 );   //a partir de l'indice 0 copier dans obj[count] la valuer de value[i] et prener l'element de 0  jusqu'a col_length1
+
+                        System.arraycopy( rel.value[j] , 0 , obj[count] , col_length1 , col_length2 - 1 );
+
+                        count++;
+                    }
+                }
+            }
+
+            System.out.println(" en_tete "+Arrays.toString( en_tete ));
+
+            for ( int i = 0 ; i!= obj.length ; i++ )
+            {
+                System.out.println(" obj "+Arrays.toString( obj[i] ));
+            } 
+
+            obj = cleanTable(obj);
+
+            Relation new_r = new Relation( this.nom , obj , funsionEn_tete(rel) , funsionType(rel)  );
+
+            printObj(new_r);
+
+            return new_r;
+        }catch( Exception e ){
+            throw e;
+        }
 
     }
 

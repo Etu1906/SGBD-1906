@@ -22,15 +22,23 @@ public class SendClientThread extends Thread {
     }
 
     public void send()throws Exception{                              //envoie de message
-        while (true) {
-            // System.out.print(">");
-            msg = sc.nextLine();
-            if(  msg.compareToIgnoreCase("exit") == 0 ){
-                break;
+        try{
+            while (true) {
+                try{
+                    // System.out.print(">");
+                    msg = sc.nextLine();
+                    if(  msg.compareToIgnoreCase("exit") == 0 ){
+                        break;
+                    }
+                    out.write( msg );                                   //ecriture du msg 
+                    out.newLine();
+                    out.flush();                                        //envoie msg
+                }catch( SocketException e ){
+                    throw new SocketException(" au revoir ");
+                }
             }
-            out.write( msg );                                   //ecriture du msg 
-            out.newLine();
-            out.flush();                                        //envoie msg
+        }catch( SocketException e ){
+            throw new SocketException(" au revoir ");
         }
     }
 
@@ -39,6 +47,8 @@ public class SendClientThread extends Thread {
         super.run();
         try{
             send();
+        }catch( SocketException e ){
+            System.out.println( e.getMessage() );
         }catch( Exception e ){
             e.printStackTrace();
         }

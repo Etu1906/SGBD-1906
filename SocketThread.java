@@ -50,7 +50,6 @@ public class SocketThread extends Thread{
                 setMessage(obj, client);                                                               //envoie du message au client
             }catch( Exception e ){
                 setMessage(e, client);
-                e.printStackTrace();
             }
             System.out.println(" client : "+msg);
         }

@@ -55,6 +55,50 @@ public class Select extends Grammaire {
             while ( i < req.length ){
                 System.out.println(" pour i : "+reference+" compare :  "+req[ reference ]+" :  "+req[ reference ].compareToIgnoreCase("where"));
 
+                if ( req[ reference ].compareToIgnoreCase("diff") == 0 ){
+                    this.next_gram.next_gram = new Diff( reference , req );
+
+                    this.next_gram.next_gram.previous_gram = this.next_gram;
+
+                    next_gram.bdd = bdd;
+
+                    break ;
+                }
+
+                if ( req[ reference ].compareToIgnoreCase("join") == 0 ){
+                    this.next_gram.next_gram = new Join( reference , req , new_r );
+
+                    this.next_gram.next_gram.previous_gram = this.next_gram;
+
+                    next_gram.bdd = bdd;
+
+                    // Relation r = new Relation();
+
+                    // new_r = this.next_gram.next_gram.action(req, r , bdd); 
+
+                    break ;
+                }
+
+                if ( req[ reference ].compareToIgnoreCase("div") == 0 ){
+                    System.out.println("nous sommes dans div");
+                    this.next_gram.next_gram = new Div( reference , req , bdd );
+
+                    this.next_gram.next_gram.previous_gram = this.next_gram;
+
+                    break;
+                }
+
+                if ( req[ reference ].compareTo("as") == 0 ){
+                    System.out.println(" ref :  as"+reference);
+
+                    int j = reference + 1;
+
+                    new_r.setNom( req[j] );
+                    defaut.setNom(  req[j] );
+
+                    reference += 1;
+                }
+
                 if ( req[ reference ].compareToIgnoreCase("where") == 0 ){
 
                     System.out.println(" ref :  where"+reference);
@@ -74,45 +118,6 @@ public class Select extends Grammaire {
     
                 }
 
-                if ( req[ reference ].compareToIgnoreCase("diff") == 0 ){
-                    this.next_gram.next_gram = new Diff( reference , req );
-
-                    this.next_gram.next_gram.previous_gram = this.next_gram;
-
-                    next_gram.bdd = bdd;
-
-                    break ;
-                }
-
-                if ( req[ reference ].compareToIgnoreCase("join") == 0 ){
-                    this.next_gram.next_gram = new Join( reference , req , new_r );
-
-                    this.next_gram.next_gram.previous_gram = this.next_gram;
-
-                    next_gram.bdd = bdd;
-
-                    break ;
-                }
-
-                if ( req[ reference ].compareToIgnoreCase("div") == 0 ){
-                    this.next_gram.next_gram = new Div( reference , req , bdd );
-
-                    this.next_gram.next_gram.previous_gram = this.next_gram;
-
-                    break;
-                }
-
-                if ( req[ reference ].compareTo("as") == 0 ){
-                    System.out.println(" ref :  as"+reference);
-
-                    int j = reference + 1;
-
-                    new_r.setNom( req[j] );
-                    defaut.setNom(  req[j] );
-
-                    reference += 1;
-                }
-
                 reference++;
 
                 if ( reference >= req.length )  break;
@@ -122,7 +127,7 @@ public class Select extends Grammaire {
 
         setValue(colonne);
 
-        new_r = this.next_gram.requete( req );
+        new_r = this.next_gram.requete( req , new_r );
 
         return new_r;
     }

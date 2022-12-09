@@ -34,7 +34,7 @@ public class From extends Grammaire {
 
     }
 
-    public Relation requete( String[] req ) throws Exception {          
+    public Relation requete( String[] req , Relation rel) throws Exception {          
         try{
             Relation table = (Relation) this.value[0];
 
