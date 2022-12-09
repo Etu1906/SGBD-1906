@@ -1,6 +1,0 @@
-etudiant
-etu%%nom%%
-number%%string%%
-1%%2%%
-29%%2%%
-
