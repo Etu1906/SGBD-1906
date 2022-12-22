@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 exemple de syntaxe : script.sql
 
 initialisation : 
@@ -94,4 +93,4 @@ update tab set col1 = val1 where col = val end
 update tab set col1 = val1 , col2 = val2  where col = val end 
 
 
->>>>>>> f4961b01204c5bfe8b018dcc22955771bd40fb15
+

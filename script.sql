@@ -1,5 +1,5 @@
 -- initialisation
-use default
+use defaut
 
 -- create dbb
 create database test end 
@@ -13,55 +13,54 @@ show tables end
 
 -- creation table
 create table etudiant as  nom string  , etu  number  end  
-create table note as nom string , etu number   , note number    end 
-create table cours as nom string end 
+create table note as id_note number ,  id_cours number , etu number   , note number    end 
+create table cours as id_c number , nom string end 
 -- insertion
 insert into etudiant values 'etudiant1' , 1 end  
 insert into etudiant col nom , etu  values  'etudiant2' , 2 end  
 insert into etudiant col nom , etu  values  'etudiant5' , 3 end  
 
 
-insert into note values 'Analyse' , 1 , 4 end
-insert into note values 'Algebre' , 1 , 12 end
+insert into note values 1 , 2 , 1 , 4 end
+insert into note values 2 , 1 , 1 , 12 end
 
 
-insert into note  col etu , note , nom values   2 , 6  , 'Analyse' end
-insert into note  col etu , note , nom values   2 , 18 , 'Algebre'  end
+-- erreur
+insert into etudiant col nom , etu  values  etudiant5 , 3 end  
+insert into etudiant col nom , etu  values  'etudiant5' , lala end  
 
-insert into note values 'Algebre' , 3 , 4 end
 
-insert into cours values 'Algebre' end
-insert into cours values 'Analyse' end
+insert into note  col id_note , etu , note , id_cours values   3 ,  2 , 6  , 2 end
+insert into note col id_note , etu , note , id_cours values 4  , 2 , 18 , 1  end
+
+insert into note values  5 , 1 , 3 , 4 end
+
+insert into cours values 1 , 'Algebre' end
+insert into cours values 2 ,  'Analyse' end
 
 
 -- selection 
 select * from etudiant  end 
 select * from etudiant where nom = etudiant1 end 
 select * from etudiant where nom like etudiant end 
-
 select nom from etudiant where nom like etudiant end
 select note,etu from note end
 
-
-select * from note where nom = Analyse and etu = 2 end
-select * from note where nom = Analyse or note = 18 end
-
-select * from note where nom = Analyse - note = 6 end
-
+-- cours d'analyse
+select * from note where id_cours = 2 and etu = 2 end
+select * from note where id_cours = 2 or note = 18 end
 
 select * from etudiant join note on etudiant.etu = note.etu end 
 
 -- division
 create table eleve as nom string , salle string end
 create table salle as nom_salle string end
-
 insert into eleve values 'rakoto' , 's1' end
 insert into eleve values 'rakoto' , 's2' end
 insert into eleve values 'rakoto' , 's3' end
 insert into eleve values 'rabe' , 's1' end
 insert into eleve values 'rabe' , 's2' end
 insert into eleve values 'rasoa' , 's1' end
-
 insert into salle values 's1' end
 insert into salle values 's2' end
 insert into salle values 's3' end
